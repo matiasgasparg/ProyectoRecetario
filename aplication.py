@@ -1,108 +1,41 @@
-from tkinter import *
-from tkinter.ttk import *
+import tkinter as tk
+from tkinter import ttk
+class MyGUI:
+    def __init__(self, master):
+        self.master = master
+        root.title("Recetario")
+        root.geometry("500x500")
+        background_color = "#272026"
+        button_color = "#00b2bc"
+        root['background'] = background_color
+        
+        # Crear una imagen de cocina
+        canvas = tk.Canvas(root, width=500, height=200, bg=background_color)
+        image_file = tk.PhotoImage(file="cocina4.png")
+        canvas.create_image(0, -10, anchor="nw", image=image_file)
+        canvas.pack()
+        canvas.image= image_file # Mantener una referencia a la imagen para evitar que sea eliminada por Python
+     
+        # Crear dos botones
+        button1 = tk.Button(self.master, text="Ingresar Receta", command=self.button1_clicked)
+        button2 = tk.Button(self.master, text="Ver todas las Recetas", command=self.button2_clicked)
+        #img_boton = tk.PhotoImage(file="cocina3.png")
+        #button3 = tk.Button(text="Buscar archivo", image=img_boton, compound=tk.TOP)
+
+        # Posicionar la imagen y los botones
+        canvas.pack(side=tk.TOP)
+        button1.place(x=150,y=300)
+        button2.place(x=250,y=300)
+        #button3.place(x=250,y=400)
 
 
-class Application:
+    def button1_clicked(self):
+        print("Botón 1 clickeado")
 
-    def __init__(self, window):
-        # Cores Padrao
-        corDeFundo = "#0f703c"
-        corDoBotao = "#56db94"
-        corDaFonte = "#000"
-        # Configurando a janela
-        window.geometry("570x530")
-        window.resizable(0, 0)
-        window.title("Agenda")
-        window['background'] = corDeFundo
+    def button2_clicked(self):
+        print("Botón 2 clickeado")
 
-        # Configuração de Estilos
-        self.TituloStyle = Style()
-        self.TituloStyle.configure("ttk.TituloStyle.TLabel", font=(
-            "Arial", 16), background=corDeFundo, foreground="white")
-
-        self.DefaultTextStyle = Style()
-        self.DefaultTextStyle.configure(
-            "TLabel", background=corDeFundo, foreground=corDaFonte)
-
-        self.DefaultButtonStyle = Style()
-        self.DefaultButtonStyle.configure(
-            "TButton", background=corDoBotao, relief="flat", foreground=corDaFonte, highlightness=0)
-        self.DefaultButtonStyle.map(
-            'TButton', background=[('active', 'black')], foreground=[('active', 'white')])
-
-        self.TextStyle = Style()
-        self.TextStyle.configure("tkk.TextStyle.TLabel", font=(
-            "Arial", 12), background=corDeFundo, foreground=corDaFonte)
-
-        self.BotaoRemoveStyle = Style()
-        self.BotaoRemoveStyle.configure(
-            "tkk.BotaoStyleRemove.TButton", background="red")
-
-        # Definindo Elementos
-        # |- Titulo
-        self.lb_Titulo = Label(
-            window, text="Agenda Pessoal de Contatos", style="ttk.TituloStyle.TLabel")
-        self.lb_Titulo.grid(row=0, column=0, columnspan=3, padx=25, pady=10)
-
-        # |- Label e Entry Nome
-        self.lb_Nome = Label(window, text="Nome", style="tkk.TextStyle.TLabel")
-        self.lb_Nome.grid(row=1, column=0, padx=25, pady=10, stick="we")
-        self.Et_Nome = Entry(window, width=50)
-        self.Et_Nome.grid(row=1, column=1, padx=25,
-                          pady=10, stick="w", columnspan=2)
-
-        # |- Label e Entry Telefone
-        self.lb_Telefone = Label(
-            window, text="Telefone", style="tkk.TextStyle.TLabel")
-        self.lb_Telefone.grid(row=2, column=0, padx=25, pady=10, stick="we")
-        self.Et_Telefone = Entry(window, width=50)
-        self.Et_Telefone.grid(row=2, column=1, padx=25,
-                              pady=10, stick="w", columnspan=2)
-
-        # |- Botao Adicionar
-        self.btn_Adicionar = Button(
-            window, text="Adicionar", style="tkk.BotaoStyle.TButton", command=lambda: control.adicionar(self))
-        self.btn_Adicionar.grid(row=3, column=0, columnspan=2, stick='e')
-
-        # |- Botao Alterar
-        # Quando pressionado uma vez, entra no modo de alteração. Após terminar a modificação, pressionar novamente para altera-lo;
-        self.modoAlterar = False
-        # Salva o ID a qual se refere a alteração. Caso o usuario quero selecionar outro mas mudar de ideia depois.
-        self.id = None
-        self.btn_Alterar = Button(
-            window, text="Alterar", command=lambda: control.alterar(self, self.modoAlterar))
-        self.btn_Alterar.grid(row=3, column=2)
-
-        # |- Label com os status da consulta
-        self.lb_Status = Label(window, text="", font=("Arial", 24))
-        self.lb_Status.grid(row=4, column=0, columnspan=3,
-                            stick="we", padx=25, pady=10)
-
-        # |- Exibição dos dados
-        self.tv_Treeview = Treeview(window, columns=("id", "nome", "telefone"), displaycolumns=[
-                                    'nome', 'telefone'], selectmode="browse")
-        self.tv_Treeview.grid(row=5, column=0, columnspan=3,
-                              padx=25, pady=10, stick="we")
-        self.tv_Treeview.heading("#0", text="ID", anchor="w")
-        self.tv_Treeview.heading("nome", text="NOME", anchor="w")
-        self.tv_Treeview.heading("telefone", text="TELEFONE", anchor="w")
-        self.tv_Treeview.column("#0", width=10)
-        self.tv_Treeview.column("nome", width=150)
-        self.tv_Treeview.column("telefone", width=150)
-
-        # |- Botao para remover
-        self.btn_Remove = Button(
-            window, text="Remover", style="tkk.BotaoStyleRemove.TButton", command=lambda: control.remover(self))
-        self.btn_Remove.grid(row=6, column=0, columnspan=3, padx=25)
-
-        # |- Creditos
-        self.lb_Credito = Label(
-            window, text="By: Daniel.augusto191@gmail.com", foreground="#FFF")
-        self.lb_Credito.grid(row=7, column=0, columnspan=3,
-                             padx=25, pady=10, stick="e")
-
-
-if __name__ == "__main__":
-    root = Tk()
-    Application(root)
+if __name__ == '__main__':
+    root = tk.Tk()
+    app = MyGUI(root)
     root.mainloop()

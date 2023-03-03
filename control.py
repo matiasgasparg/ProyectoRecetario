@@ -1,2 +1,3 @@
 
-def agregarReceta(self)
+def agregarReceta(self):
+    
