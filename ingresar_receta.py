@@ -45,7 +45,7 @@ class ingresar_receta(Toplevel):
         self.eti_label = ttk.Label(self.F_rec)
         self.eti_input = ttk.Entry(self.F_rec)
         #Ingredientes
-        self.ing_input=ttk.Label(self.F_ing)
+        self.ing_input=ttk.Entry(self.F_ing)
         self.option_menu = tk.OptionMenu(self.F_ing,"Opción 1", "Opción 2", "Opción 3")
         #Botones
         self.ingresarReceta_bott = ttk.Button(self.F_boton)
