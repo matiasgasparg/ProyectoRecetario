@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, Toplevel
 from Clases.recetario import Recetario
+from ingresar_ingredientes import ingresar_ingredientes
 
 class ingresar_receta(Toplevel):
     def __init__(self, master=None,base_datos=None):
@@ -45,9 +46,9 @@ class ingresar_receta(Toplevel):
         self.eti_label = ttk.Label(self.F_rec)
         self.eti_input = ttk.Entry(self.F_rec)
         #Ingredientes
-        self.ing_input=ttk.Entry(self.F_ing)
-        self.option_menu = tk.OptionMenu(self.F_ing,"Opción 1", "Opción 2", "Opción 3")
+
         #Botones
+        self.ingresarIngrediente_bott=ttk.Button(self.F_boton)
         self.ingresarReceta_bott = ttk.Button(self.F_boton)
         self.Cancelar_bott = ttk.Button(self.F_boton)
 
@@ -88,9 +89,9 @@ class ingresar_receta(Toplevel):
         self.eti_label.config(text = '#Etiquetas', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
         self.eti_input.config(width = 30)
         #Ingredientes
-        self.ing_input.config(width = 30)
-        self.option_menu.config(width =5)
+
         #Botones
+        self.ingresarIngrediente_bott.config(text = 'Ingresar Ingredientes', command = self.ingresar_ingredientes)
         self.ingresarReceta_bott.config(text = 'Guardar', command = self.Guardar)
         self.Cancelar_bott.config(text = 'Cancelar', command = self.Cancelar)
 
@@ -122,24 +123,24 @@ class ingresar_receta(Toplevel):
         #Etiquetas
         self.eti_label.grid(row = 5, column = 0, columnspan = 2, pady = 5)
         self.eti_input.grid(row = 6, column = 0, columnspan = 2)
-        #Ingredientes
-        self.ing_input.grid(row = 2, column = 0, padx = 10)
-        self.option_menu.grid(row = 2, column = 1)
+
        
         #Botones
+        self.ingresarIngrediente_bott.grid(row = 2, column = 0, columnspan = 2,pady = 5)
         self.ingresarReceta_bott.grid(row = 5, column = 0, padx = 10, pady = 10, ipadx = 5, ipady = 5)
         self.Cancelar_bott.grid(row = 5, column = 1, padx = 10, pady = 10, ipadx = 5, ipady = 5)
-
+    def ingresar_ingredientes(self):
+        ventana=ingresar_ingredientes(self)
+        ventana.mainloop()
     def Guardar(self):
         img = self.imgRec_input.get()
         TiempoPre = self.tiempoPre_input.get()
         tiempoCoc = self.tiempoCoc_input.get()
         fechaCrea = self.fechaCrea_input.get()
         eti = self.eti_input.get()
-        ing = self.ing_input.get()
 
-        if len(TiempoPre) > 0 and len(tiempoCoc) > 0 and len(fechaCrea) > 0 and len(eti) > 0 and len(ing) > 0:
-            mensaje = self.Recetario.guardar(self.bdd, img, TiempoPre, tiempoCoc, fechaCrea, eti, ing)
+        if len(TiempoPre) > 0 and len(tiempoCoc) > 0 and len(fechaCrea) > 0 and len(eti) > 0:
+            mensaje = self.Recetario.guardar(self.bdd, img, TiempoPre, tiempoCoc, fechaCrea, eti )
             messagebox.showinfo('Aviso', mensaje)
             if mensaje == 'Receta registrada exitosamente!':
                 self.Cancelar()

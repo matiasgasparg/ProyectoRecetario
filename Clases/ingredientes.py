@@ -5,13 +5,28 @@ class Ingredientes():
         self.cantidadDeMedida = cantidadDeMedida
     
 
-    def nombre_setter(self, nombre=None):
-        self.nombre = nombre.title()
+    def nombre_setter(self, nombre):
+        self.nombre = nombre
     
     def unidadDeMedida_setter(self,unidadDeMedida):
-        self.unidadDeMedida=unidadDeMedida.title()
-
+        self.unidadDeMedida=unidadDeMedida
     def cantidadDeMedida_setter(self,cantidadDeMedida):
-        self.cantidadDeMedida=cantidadDeMedida.title()
+        self.cantidadDeMedida=cantidadDeMedida
+
+    def guardar_ingredientes(self,nombre,unidadDeMedidad,cantidadDeMedida):
+        self.nombre_setter(nombre)
+        self.unidadDeMedida_setter(unidadDeMedidad)
+        self.cantidadDeMedida_setter(cantidadDeMedida)
+    def devolver(self):
+        nombre=self.nombre
+        unidad=self.unidadDeMedida
+        cantidad=self.cantidadDeMedida
+        lista=[nombre,unidad,cantidad]
+        return lista
     def __str__(self):
-        return "Nombre de ingrediente: "+ self.nombre + "\nUnidade de medida: "+ self.unidadDeMedida+ "\nCantidad: "+ str(self.cantidad)
+        return "Nombre de ingrediente: "+ self.nombre + "\nUnidade de medida: "+ self.unidadDeMedida+ "\nCantidad: "+ str(self.cantidadDeMedida)
+
+
+prueba=Ingredientes()
+prueba.guardar_ingredientes("Arroz","KG","100")
+prueba.devolver()
