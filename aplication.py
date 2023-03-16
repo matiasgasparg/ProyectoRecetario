@@ -2,17 +2,16 @@ import tkinter as tk
 from tkinter import ttk
 from ingresar_receta import ingresar_receta
 class MyGUI(tk.Tk):
-    def __init__(self, master):
+    def __init__(self):
         tk.Tk.__init__(self)
-        self.master = master
-        root.title("Recetario")
-        root.geometry("500x500")
+        self.title("Recetario")
+        self.geometry("500x500")
         background_color = "#272026"
         button_color = "#00b2bc"
-        root['background'] = background_color
+        self['background'] = background_color
         
         # Crear una imagen de cocina
-        canvas = tk.Canvas(root, width=500, height=200, bg=background_color)
+        canvas = tk.Canvas(self, width=500, height=200, bg=background_color)
         image_file = tk.PhotoImage(file="IMG/cocina4.png")
         canvas.create_image(0, -10, anchor="nw", image=image_file)
         canvas.pack()
@@ -32,6 +31,7 @@ class MyGUI(tk.Tk):
 
 
     def ingresar_receta(self):
+        self.withdraw
         ventana=ingresar_receta(self)
         ventana.mainloop()
         
@@ -40,7 +40,3 @@ class MyGUI(tk.Tk):
     def button2_clicked(self):
         print("Botón 2 clickeado")
 
-if __name__ == '__main__':
-    root = tk.Tk()
-    app = MyGUI(root)
-    root.mainloop()

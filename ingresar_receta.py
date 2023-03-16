@@ -7,7 +7,7 @@ from ingresar_ingredientes import Ingresar_ingredientes
 from Clases.ingredientes import Ingredientes
 import csv
 class ingresar_receta(Toplevel):
-    def __init__(self, master=None,base_datos=None):
+    def __init__(self, master=None):
         Toplevel.__init__(self, master)
         self.master = master # referencia a la ventana ppal
         self.geometry('418x700')
@@ -17,7 +17,7 @@ class ingresar_receta(Toplevel):
         self.protocol('WM_DELETE_WINDOW', self.Cancelar)
         self.resizable(0,0)
         self.Ingresar_ingredientes=Ingresar_ingredientes()
-        self.bdd = base_datos
+
         self.Recetario = Recetario()
         self.Ingredientes = Ingredientes()
         
@@ -133,11 +133,10 @@ class ingresar_receta(Toplevel):
         self.Cancelar_bott.grid(row = 5, column = 1, padx = 10, pady = 10, ipadx = 5, ipady = 5)
     
     def ingresar_ingredientes(self):
-        ventana=Ingresar_ingredientes()
-        ventana.wait_window()
-        global nombre
-        nombre=ventana.valor
-        return nombre
+        self.withdraw
+        ventana=Ingresar_ingredientes(self)
+        ventana.mainloop()
+        
     
 
     def Guardar(self):
@@ -160,7 +159,6 @@ class ingresar_receta(Toplevel):
                     reader = csv.DictReader(file)
                     for row in reader:
                         recetas.append(row)
-         
             except FileNotFoundError:
                 pass
             with open('informacion.csv', mode='a', newline='') as file:
@@ -171,5 +169,4 @@ class ingresar_receta(Toplevel):
   
     def Cancelar(self):
         self.destroy()
-        self.master.deiconify()
 

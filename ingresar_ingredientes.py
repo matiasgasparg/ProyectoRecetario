@@ -3,7 +3,7 @@ from tkinter import ttk, messagebox, Toplevel
 from Clases.ingredientes import Ingredientes
 
 class Ingresar_ingredientes(Toplevel):
-    def __init__(self, master=None,base_datos=None):
+    def __init__(self, master=None):
         Toplevel.__init__(self, master)
         self.master = master # referencia a la ventana ppal
         self.geometry('418x600')
@@ -12,7 +12,6 @@ class Ingresar_ingredientes(Toplevel):
         self.protocol('WM_DELETE_WINDOW', self.Cancelar)
         self.resizable(0,0)
         opciones=["kg","g","cm3","cucharadita/s","Tazas"]
-        self.bdd = base_datos
         self.Ingredientes = Ingredientes()
 
         #Frames
@@ -74,20 +73,22 @@ class Ingresar_ingredientes(Toplevel):
         nombre=self.nombre_input.get()
         cantidad=self.cantidad_input.get()
         option=self.option_menu.get()
-        valor=[nombre,cantidad,option]
         if len(nombre) > 0 and len(cantidad) > 0 and len(option) > 0:
             mensaje = self.Ingredientes.guardar_ingredientes(nombre, cantidad, option)
             messagebox.showinfo('Aviso', mensaje)
             if mensaje == 'Ingrediente registrado exitosamente!':
                 self.Cancelar()
-                return valor
         else:
             messagebox.showerror('Error', 'Debe rellenar todos los campos!')
 
-        print(self.Ingredientes.devolver())
 
     def ingredientesDevolver(self):
         return self.Ingredientes.devolver()
+    def report_callback_exception(self, exc, val, tb):
+        messagebox.showerror("Error", message=str(val))
     def Cancelar(self):
-        self.destroy()
-        self.master.deiconify()
+        try:
+            self.destroy()
+            self.master.deiconify()
+        except Exception as e:
+            messagebox.showerror('Error', f'Ocurrió un error al cerrar la ventana: {str(e)}')
