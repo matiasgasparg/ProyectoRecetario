@@ -1,8 +1,11 @@
 import tkinter as tk
+from tkinter import Tk, Button, Label
+
 from tkinter import ttk, messagebox, Toplevel
 from Clases.recetario import Recetario
-from ingresar_ingredientes import ingresar_ingredientes
-
+from ingresar_ingredientes import Ingresar_ingredientes
+from Clases.ingredientes import Ingredientes
+import csv
 class ingresar_receta(Toplevel):
     def __init__(self, master=None,base_datos=None):
         Toplevel.__init__(self, master)
@@ -13,9 +16,10 @@ class ingresar_receta(Toplevel):
         self.iconbitmap('IMG/cocina2.png')
         self.protocol('WM_DELETE_WINDOW', self.Cancelar)
         self.resizable(0,0)
-
+        self.Ingresar_ingredientes=Ingresar_ingredientes()
         self.bdd = base_datos
         self.Recetario = Recetario()
+        self.Ingredientes = Ingredientes()
         
         """FRAMES"""
         self.F_cab = tk.Frame(self)         #Cabecera
@@ -88,8 +92,6 @@ class ingresar_receta(Toplevel):
         #Etiquetas
         self.eti_label.config(text = '#Etiquetas', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
         self.eti_input.config(width = 30)
-        #Ingredientes
-
         #Botones
         self.ingresarIngrediente_bott.config(text = 'Ingresar Ingredientes', command = self.ingresar_ingredientes)
         self.ingresarReceta_bott.config(text = 'Guardar', command = self.Guardar)
@@ -129,24 +131,44 @@ class ingresar_receta(Toplevel):
         self.ingresarIngrediente_bott.grid(row = 2, column = 0, columnspan = 2,pady = 5)
         self.ingresarReceta_bott.grid(row = 5, column = 0, padx = 10, pady = 10, ipadx = 5, ipady = 5)
         self.Cancelar_bott.grid(row = 5, column = 1, padx = 10, pady = 10, ipadx = 5, ipady = 5)
+    
     def ingresar_ingredientes(self):
-        ventana=ingresar_ingredientes(self)
-        ventana.mainloop()
+        ventana=Ingresar_ingredientes()
+        ventana.wait_window()
+        global nombre
+        nombre=ventana.valor
+        return nombre
+    
+
     def Guardar(self):
         img = self.imgRec_input.get()
         TiempoPre = self.tiempoPre_input.get()
         tiempoCoc = self.tiempoCoc_input.get()
         fechaCrea = self.fechaCrea_input.get()
         eti = self.eti_input.get()
-
-        if len(TiempoPre) > 0 and len(tiempoCoc) > 0 and len(fechaCrea) > 0 and len(eti) > 0:
-            mensaje = self.Recetario.guardar(self.bdd, img, TiempoPre, tiempoCoc, fechaCrea, eti )
+        ingredientes=self.Ingresar_ingredientes.ingredientesDevolver()
+        print(f"Estos son los ingredientes {self.Ingresar_ingredientes.ingredientesDevolver()}")
+        recetas=[img,TiempoPre,tiempoCoc,fechaCrea,eti,ingredientes]
+        if len(TiempoPre) > 0 and len(tiempoCoc) > 0 and len(fechaCrea) > 0 and len(eti) > 0 and len(ingredientes) > 0:
+            mensaje=self.Recetario.guardar(img,TiempoPre,tiempoCoc,fechaCrea,eti)
             messagebox.showinfo('Aviso', mensaje)
-            if mensaje == 'Receta registrada exitosamente!':
+            if mensaje == 'Ingrediente registrado exitosamente!':
                 self.Cancelar()
+
+            try:
+                with open('informacion.csv', mode='r', newline='') as file:
+                    reader = csv.DictReader(file)
+                    for row in reader:
+                        recetas.append(row)
+         
+            except FileNotFoundError:
+                pass
+            with open('informacion.csv', mode='a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow([img, TiempoPre,tiempoCoc,fechaCrea,eti,ingredientes])
         else:
             messagebox.showerror('Error', 'Debe rellenar todos los campos!')
-
+  
     def Cancelar(self):
         self.destroy()
         self.master.deiconify()

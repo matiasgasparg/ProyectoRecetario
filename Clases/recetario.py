@@ -1,13 +1,15 @@
 from Clases.ingredientes import Ingredientes
+from datetime import datetime
+import csv
 class Recetario (Ingredientes):
     def __init__(self,idreceta=None,nombre='',unidadDeMedida='',cantidadDeMedida='',imgDelPlato='',tiemplDePreparacion='',tiempoDeCoccion='',fechaDeCreacion='',etiquetas='',isfavorito=''):
         Ingredientes.__init__(self,nombre,unidadDeMedida,cantidadDeMedida)
         self.imgDelPlato = imgDelPlato
         self.tiemplDePreparacion = tiemplDePreparacion
         self.tiempoDeCoccion = tiempoDeCoccion
-        self.fechaDeCreacion = fechaDeCreacion
-        self.etiquetas= etiquetas
-        self.isfavorito=isfavorito
+        self.fechaDeCreacion = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        self.etiquetas= []
+        self.isfavorito=False
 
     
     def imgDelPlato_setter(self,imgDelPlato):
@@ -23,15 +25,16 @@ class Recetario (Ingredientes):
         self.etiquetas=etiquetas
     def isfavorito_setter(self,isfavorito):
         self.isfavorito=isfavorito
-    def guardar(self,imgDelPlato,tiemplDePreparacion,tiempoDeCoccion,fechaDeCreacion,etiquetas,isfavorito):
+    def guardar(self,imgDelPlato,tiemplDePreparacion,tiempoDeCoccion,fechaDeCreacion,etiquetas):
         mensaje=''
         self.imgDelPlato_setter(imgDelPlato)
         self.tiemplDePreparacion_setter(tiemplDePreparacion)
         self.tiempoDeCoccion_setter(tiempoDeCoccion)
         self.fechaDeCreacion_setter(fechaDeCreacion)
         self.etiquetas_setter(etiquetas)
-        self.isfavorito_setter(isfavorito)
-        return mensaje
+
+        lista=(self.imgDelPlato,self.tiemplDePreparacion,self.tiempoDeCoccion,self.etiquetas)
+        return "Receta Ingresada correctamente"
     def __str__(self):
         return "Numero de receta: " + self.idreceta +"\n lista de Ingredientes: " + self.listaIngredientes + "\nTiempo de preparación: "+ str(self.tiemplDePreparacion) + "\nTiempo de Cocción: " + str(self.tiempoDeCoccion)+ "\Fecha de Creación: " + str(self.fechaDeCreacion)+ "\nEtiquetas: " + str(self.etiquetas)+ "\Es favorito?: " +self.isfavorito
         

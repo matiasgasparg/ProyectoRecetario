@@ -17,6 +17,7 @@ class Ingredientes():
         self.nombre_setter(nombre)
         self.unidadDeMedida_setter(unidadDeMedidad)
         self.cantidadDeMedida_setter(cantidadDeMedida)
+        return 'Ingrediente registrado exitosamente!'
     def devolver(self):
         nombre=self.nombre
         unidad=self.unidadDeMedida

@@ -1,37 +1,49 @@
 import tkinter as tk
-from tkinter import ttk, messagebox, Toplevel
-from Clases.ingredientes import Ingredientes
+import csv
 
-class ingresar_ingredientes(Toplevel):
-    def __init__(self, master=None,base_datos=None):
-        Toplevel.__init__(self, master)
-        self.geometry('600x500')
-        self.config(bg = '#056595')
-        self.title('Ingredientes')
+class VentanaPrincipal:
+    def __init__(self, master):
+        self.master = master
+        master.title("Ventana Principal")
 
-        #Botón para agregar nuevos widgets
-        self.agregar_bott = ttk.Button(self, text='Agregar', command=self.agregar_widgets)
-        self.agregar_bott.pack(pady=10)
+        # Crear botón para abrir ventana hija
+        self.btn_abrir = tk.Button(master, text="Abrir ventana hija", command=self.abrir_ventana_hija)
+        self.btn_abrir.pack()
 
-    def agregar_widgets(self):
-        #Crear nuevos widgets
-        nuevo_label=ttk.Label(self,text="Ingrediente")
-        nuevo_input = ttk.Entry(self)
-        nuevo_label2=ttk.Label(self,text="Unidad de medida")
-        opciones = ['Opción 1', 'Opción 2', 'Opción 3']
-        nuevo_menu = ttk.Combobox(self, values=opciones)
-        nuevo_label3=ttk.Label(self,text="Cantidad")
-        nuevo_input2= ttk.Entry(self)
+    def abrir_ventana_hija(self):
+        # Crear ventana hija
+        ventana_hija = tk.Toplevel(self.master)
+        ventana_hija.title("Ventana Hija")
 
-        #Configurar los widgets
-        nuevo_input.config(width=30)
-        nuevo_menu.config(width=10)
+        # Crear etiquetas y campos de entrada para obtener información
+        self.lbl_nombre = tk.Label(ventana_hija, text="Nombre:")
+        self.lbl_nombre.grid(row=0, column=0)
+        self.txt_nombre = tk.Entry(ventana_hija)
+        self.txt_nombre.grid(row=0, column=1)
 
-        #Agregar los widgets a la ventana
-        nuevo_label.pack(pady=5)
-        nuevo_input.pack(pady=5)
-        nuevo_label2.pack(pady=5)
-        nuevo_menu.pack (pady=5)
-        nuevo_label3.pack(pady=5)
-        nuevo_input2.pack(pady=5)
+        self.lbl_edad = tk.Label(ventana_hija, text="Edad:")
+        self.lbl_edad.grid(row=1, column=0)
+        self.txt_edad = tk.Entry(ventana_hija)
+        self.txt_edad.grid(row=1, column=1)
 
+        # Crear botón para guardar información en archivo csv
+        self.btn_guardar = tk.Button(ventana_hija, text="Guardar", command=self.guardar_info_csv)
+        self.btn_guardar.grid(row=2, column=0, columnspan=2)
+
+    def guardar_info_csv(self):
+        # Obtener información ingresada en la ventana hija
+        nombre = self.txt_nombre.get()
+        edad = self.txt_edad.get()
+
+        # Guardar información en archivo csv
+        with open('informacion.csv', mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([nombre, edad])
+
+        # Cerrar ventana hija después de guardar información
+        self.master.focus_set()
+
+# Crear ventana principal
+root = tk.Tk()
+ventana_principal = VentanaPrincipal(root)
+root.mainloop()

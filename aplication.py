@@ -34,6 +34,7 @@ class MyGUI(tk.Tk):
     def ingresar_receta(self):
         ventana=ingresar_receta(self)
         ventana.mainloop()
+        
 
 
     def button2_clicked(self):

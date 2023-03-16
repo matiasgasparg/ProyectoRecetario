@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox, Toplevel
 from Clases.ingredientes import Ingredientes
 
-class ingresar_ingredientes(Toplevel):
+class Ingresar_ingredientes(Toplevel):
     def __init__(self, master=None,base_datos=None):
         Toplevel.__init__(self, master)
         self.master = master # referencia a la ventana ppal
@@ -11,7 +11,7 @@ class ingresar_ingredientes(Toplevel):
         self.title('Ingresar Ingrediente')
         self.protocol('WM_DELETE_WINDOW', self.Cancelar)
         self.resizable(0,0)
-        opciones=["Opcion1","Opcion2","Opcion3"]
+        opciones=["kg","g","cm3","cucharadita/s","Tazas"]
         self.bdd = base_datos
         self.Ingredientes = Ingredientes()
 
@@ -47,7 +47,7 @@ class ingresar_ingredientes(Toplevel):
         self.cantidad_input.config(width = 30)
         self.option_menu_label.config(text = 'Unidad de Medida', foreground = '#FFFFFF', font = ('Segoe UI Black', 10), background = '#002B40')
         self.option_menu.config(width=10)            
-        self.ingresarReceta_bott.config(text = 'Guardar', command = self.Guardar)
+        self.ingresarReceta_bott.config(text = 'Guardar', command = self.guardar_ingrediente)
         self.Cancelar_bott.config(text = 'Cancelar', command = self.Cancelar)
     def frames_grid(self):
         self.F_cab.grid(row = 0, column = 0, columnspan = 2)
@@ -70,20 +70,24 @@ class ingresar_ingredientes(Toplevel):
         self.ingresarReceta_bott.grid(row = 7, column = 0, padx = 10, pady = 10, ipadx = 5, ipady = 5)
         self.Cancelar_bott.grid(row = 7, column = 1, padx = 10, pady = 10, ipadx = 5, ipady = 5)
  
-    def Guardar(self):
+    def guardar_ingrediente(self):
         nombre=self.nombre_input.get()
         cantidad=self.cantidad_input.get()
         option=self.option_menu.get()
-
+        valor=[nombre,cantidad,option]
         if len(nombre) > 0 and len(cantidad) > 0 and len(option) > 0:
-            a = self.Ingredientes.guardar_ingredientes(nombre, cantidad, option)
-            messagebox.showinfo('Aviso', a)
-            if a == 'Ingrediente registrado exitosamente!':
+            mensaje = self.Ingredientes.guardar_ingredientes(nombre, cantidad, option)
+            messagebox.showinfo('Aviso', mensaje)
+            if mensaje == 'Ingrediente registrado exitosamente!':
                 self.Cancelar()
+                return valor
         else:
             messagebox.showerror('Error', 'Debe rellenar todos los campos!')
-    
 
+        print(self.Ingredientes.devolver())
+
+    def ingredientesDevolver(self):
+        return self.Ingredientes.devolver()
     def Cancelar(self):
         self.destroy()
         self.master.deiconify()
