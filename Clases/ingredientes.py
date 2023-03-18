@@ -14,9 +14,11 @@ class Ingredientes():
         self.cantidadDeMedida=cantidadDeMedida
 
     def guardar_ingredientes(self,nombre,unidadDeMedidad,cantidadDeMedida):
+        mensaje=0
         self.nombre_setter(nombre)
         self.unidadDeMedida_setter(unidadDeMedidad)
         self.cantidadDeMedida_setter(cantidadDeMedida)
+    
         return 'Ingrediente registrado exitosamente!'
     def devolver(self):
         nombre=self.nombre
@@ -28,6 +30,4 @@ class Ingredientes():
         return "Nombre de ingrediente: "+ self.nombre + "\nUnidade de medida: "+ self.unidadDeMedida+ "\nCantidad: "+ str(self.cantidadDeMedida)
 
 
-prueba=Ingredientes()
-prueba.guardar_ingredientes("Arroz","KG","100")
-prueba.devolver()
+

@@ -1,22 +1,26 @@
 import tkinter as tk
 from tkinter import Tk, Button, Label
-
+from tkinter import filedialog
 from tkinter import ttk, messagebox, Toplevel
 from Clases.recetario import Recetario
 from ingresar_ingredientes import Ingresar_ingredientes
 from Clases.ingredientes import Ingredientes
 import csv
+from PIL import Image, ImageTk
+from tkinter import Canvas
+
 class ingresar_receta(Toplevel):
     def __init__(self, master=None):
         Toplevel.__init__(self, master)
         self.master = master # referencia a la ventana ppal
-        self.geometry('418x700')
+        self.master.iconify()
+
+        self.geometry('430x700')
         self.config(bg = '#056595')
         self.title('Ingresar Receta')
         self.iconbitmap('IMG/cocina2.png')
-        self.protocol('WM_DELETE_WINDOW', self.Cancelar)
         self.resizable(0,0)
-        self.Ingresar_ingredientes=Ingresar_ingredientes()
+        self.Ingresar_ingredientes=Ingresar_ingredientes(self)
 
         self.Recetario = Recetario()
         self.Ingredientes = Ingredientes()
@@ -30,13 +34,12 @@ class ingresar_receta(Toplevel):
         """WIDGETS"""
         #Titulo - Principal
         self.Cab_principal = ttk.Label(self.F_cab)
-        #Titulo - Datos de la receta
-        self.Cab_receta = ttk.Label(self.F_rec)
         #Titulo - Datos de los ingredientes
         self.Cab_ingredientes = ttk.Label(self.F_ing)
         #Imagen de la receta
         self.imgRec_label = ttk.Label(self.F_rec)
-        self.imgRec_input = ttk.Entry(self.F_rec)
+        self.path_text = tk.Text(self.F_rec)
+        self.canvas = Canvas(self.F_rec)
         #Tiempo de preparación
         self.tiempoPre_label = ttk.Label(self.F_rec)
         self.tiempoPre_input = ttk.Entry(self.F_rec)
@@ -52,6 +55,7 @@ class ingresar_receta(Toplevel):
         #Ingredientes
 
         #Botones
+        self.upload_button = tk.Button(self.F_rec)
         self.ingresarIngrediente_bott=ttk.Button(self.F_boton)
         self.ingresarReceta_bott = ttk.Button(self.F_boton)
         self.Cancelar_bott = ttk.Button(self.F_boton)
@@ -73,13 +77,13 @@ class ingresar_receta(Toplevel):
     def widgets_config(self):
         #Titulo - Principal
         self.Cab_principal.config(text = 'Ingresá tu receta!', foreground = '#FFFFFF', font = ('Segoe UI Black', 25), background = '#002B40', justify='center')
-        #Titulo - Datos la receta
-        self.Cab_receta.config(text = 'Ingresa los ingredientes', foreground = '#FFFFFF', font = ('Segoe UI Black', 24), background = '#002B40')
         #Titulo - Ingredientes
         self.Cab_ingredientes.config(text = 'Ingredientes', foreground = '#FFFFFF', font = ('Segoe UI Black', 24), background = '#002B40')
         #Imagen de la receta
         self.imgRec_label.config(text = 'Imagen de la receta', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
-        self.imgRec_input.config(width = 30)
+        self.canvas.config(width=150, height=150)
+        self.upload_button.config(text="Subir imagen", command=self.upload_image)
+        self.image = None # Variable para almacenar la imagen cargada
         #Tiempo de preparacion
         self.tiempoPre_label.config(text = 'Tiempo de preparación', foreground = '#FFFFFF', font = ('Segoe UI Black', 13), background = '#056595')
         self.tiempoPre_input.config(width = 30)
@@ -99,32 +103,34 @@ class ingresar_receta(Toplevel):
 
     def frames_grid(self):
         self.F_cab.grid(row = 0, column = 0, columnspan = 2)
-        self.F_rec.grid(row = 1, column = 0, columnspan = 2, pady = 20)
+        self.F_rec.grid(row=1, column=0, padx=10, pady=10, sticky='nsew')
         self.F_ing.grid(row = 2, column = 0, columnspan = 2, pady = 20)
         self.F_boton.grid(row = 3, column = 0, columnspan = 2)
 
     def widgets_grid(self):
         #Titulo - Principal
-        self.Cab_principal.grid(row = 0, ipady = 10)
-        #Titulo - Datos de la Receta
-        self.Cab_receta.grid(row = 0, column = 0, columnspan = 2)
+        self.Cab_principal.grid(row = 0)
         #Titulo - Ingredientes
         self.Cab_ingredientes.grid(row = 0, columnspan= 2)
         #Imagen
-        self.imgRec_label.grid(row = 1, column = 0, pady = 5)
-        self.imgRec_input.grid(row = 2, column = 0, padx = 10)
+        self.imgRec_label.grid(row = 1, columnspan= 2, pady = 5)
+        #Boton de subir imagen
+        self.upload_button.grid(row = 2, columnspan = 2, padx = 10,pady=5)
+        #Espacio para la imagen
+        self.canvas.grid(row=3,columnspan=2,padx=10)
+
         #Tiempo de Preparación
-        self.tiempoPre_label.grid(row = 1, column = 1, pady = 10)
-        self.tiempoPre_input.grid(row = 2, column = 1, padx = 10)
+        self.tiempoPre_label.grid(row = 4, column = 0, pady = 5)
+        self.tiempoPre_input.grid(row = 5, column = 0, padx = 10)
         #Tiempo de Cocción
-        self.tiempoCoc_label.grid(row = 3, column = 0, pady = 5)
-        self.tiempoCoc_input.grid(row = 4, column = 0, padx = 10)
+        self.tiempoCoc_label.grid(row = 4, column = 1, pady = 5)
+        self.tiempoCoc_input.grid(row = 5, column = 1, padx = 10)
         #Fecha de creación
-        self.fechaCrea_label.grid(row = 3, column = 1, pady = 5)
-        self.fechaCrea_input.grid(row = 4, column = 1, padx = 10)
+        self.fechaCrea_label.grid(row = 6, column = 0, pady = 5)
+        self.fechaCrea_input.grid(row = 7, column = 0, padx = 10)
         #Etiquetas
-        self.eti_label.grid(row = 5, column = 0, columnspan = 2, pady = 5)
-        self.eti_input.grid(row = 6, column = 0, columnspan = 2)
+        self.eti_label.grid(row = 6, column = 1, columnspan = 2, pady = 5)
+        self.eti_input.grid(row = 7, column = 1, columnspan = 2)
 
        
         #Botones
@@ -133,14 +139,11 @@ class ingresar_receta(Toplevel):
         self.Cancelar_bott.grid(row = 5, column = 1, padx = 10, pady = 10, ipadx = 5, ipady = 5)
     
     def ingresar_ingredientes(self):
-        self.withdraw
-        ventana=Ingresar_ingredientes(self)
+        ventana=ingresar_receta(self)
         ventana.mainloop()
-        
     
-
     def Guardar(self):
-        img = self.imgRec_input.get()
+        img = self.path_text.get(1.0, tk.END).strip()
         TiempoPre = self.tiempoPre_input.get()
         tiempoCoc = self.tiempoCoc_input.get()
         fechaCrea = self.fechaCrea_input.get()
@@ -152,7 +155,7 @@ class ingresar_receta(Toplevel):
         if len(TiempoPre) > 0 and len(tiempoCoc) > 0 and len(fechaCrea) > 0 and len(eti) > 0 and len(ingredientes) > 0:
             mensaje=self.Recetario.guardar(img,TiempoPre,tiempoCoc,fechaCrea,eti)
             messagebox.showinfo('Aviso', mensaje)
-            if mensaje == 'Ingrediente registrado exitosamente!':
+            if mensaje == 'Receta registrada exitosamente!':
                 self.Cancelar()
 
             try:
@@ -166,8 +169,22 @@ class ingresar_receta(Toplevel):
                 writer = csv.writer(file)
                 writer.writerow([img, TiempoPre,tiempoCoc,fechaCrea,eti,ingredientes])
         else:
+     
             messagebox.showerror('Error', 'Debe rellenar todos los campos!')
+    def upload_image(self):
+        # Abrir cuadro de diálogo para seleccionar archivo de imagen
+        filename = filedialog.askopenfilename(initialdir="/", title="Seleccionar imagen", filetypes=(("Archivos de imagen", "*.jpg;*.jpeg;*.png"), ("Todos los archivos", "*.*")))
+        
+        # Actualizar cuadro de texto con la ubicación del archivo de imagen seleccionado
+        self.path_text.delete(1.0, tk.END)
+        self.path_text.insert(tk.END, filename)
+
+        # Cargar imagen en el canvas y dimensionarla a 200x200
+        image = Image.open(filename)
+        self.image = ImageTk.PhotoImage(image.resize((200, 200), Image.ANTIALIAS))
+        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
   
     def Cancelar(self):
         self.destroy()
+        self.master.iconify()
 

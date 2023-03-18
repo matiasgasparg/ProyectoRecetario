@@ -33,11 +33,9 @@ class MyGUI(tk.Tk):
 
 
     def ingresar_receta(self):
-        self.withdraw
         ventana=ingresar_receta(self)
         ventana.mainloop()
         
     def open_ver_recetas(self):
-        self.withdraw
         ventana=VerRecetasWindow(self)
         ventana.mainloop()
