@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 from ingresar_receta import ingresar_receta
+import csv
+from ver_recetas import VerRecetasWindow
+from PIL import ImageTk, Image
 class MyGUI(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -9,7 +12,6 @@ class MyGUI(tk.Tk):
         background_color = "#272026"
         button_color = "#00b2bc"
         self['background'] = background_color
-        
         # Crear una imagen de cocina
         canvas = tk.Canvas(self, width=500, height=200, bg=background_color)
         image_file = tk.PhotoImage(file="IMG/cocina4.png")
@@ -19,7 +21,7 @@ class MyGUI(tk.Tk):
      
         # Crear dos botones
         button1 = tk.Button(self.master, text="Ingresar Receta", command=self.ingresar_receta)
-        button2 = tk.Button(self.master, text="Ver todas las Recetas", command=self.button2_clicked)
+        button2 = tk.Button(self.master, text="Ver todas las Recetas", command=self.open_ver_recetas)
         #img_boton = tk.PhotoImage(file="cocina3.png")
         #button3 = tk.Button(text="Buscar archivo", image=img_boton, compound=tk.TOP)
 
@@ -35,8 +37,7 @@ class MyGUI(tk.Tk):
         ventana=ingresar_receta(self)
         ventana.mainloop()
         
-
-
-    def button2_clicked(self):
-        print("Botón 2 clickeado")
-
+    def open_ver_recetas(self):
+        self.withdraw
+        ventana=VerRecetasWindow(self)
+        ventana.mainloop()

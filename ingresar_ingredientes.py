@@ -77,7 +77,8 @@ class Ingresar_ingredientes(Toplevel):
             mensaje = self.Ingredientes.guardar_ingredientes(nombre, cantidad, option)
             messagebox.showinfo('Aviso', mensaje)
             if mensaje == 'Ingrediente registrado exitosamente!':
-                self.Cancelar()
+                self.mainloop()
+                self.master.deiconify()
         else:
             messagebox.showerror('Error', 'Debe rellenar todos los campos!')
 
@@ -89,6 +90,6 @@ class Ingresar_ingredientes(Toplevel):
     def Cancelar(self):
         try:
             self.destroy()
-            self.master.deiconify()
+            self.ingresar_receta.deiconify()
         except Exception as e:
             messagebox.showerror('Error', f'Ocurrió un error al cerrar la ventana: {str(e)}')

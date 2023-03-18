@@ -1,6 +1,2 @@
-Imagen,Tiempo de cocción,Fecha de Creación,Ingredientes
-sadas,dasdasd,dasdsa,asdsadasd,asdasd,"['asdsa', 'asd', 'g']"
-sadas,dasdasd,dasdsa,asdsadasd,asdasd,"['asdsa', 'asd', 'g']"
-asdsad,asdasdas,asdas,asdas,asdas,"['asdsad', 'asdsad', 'g']"
-asdsad,asdasdas,asdas,asdas,asdas,"['asdsad', 'asdsad', 'g']"
-sdsa,dsad,asdasdasd,asd,asdasd,"['asdsa', 'asd', 'kg']"
+Imagen del plato,Tiempo de coccion,Tiempo de preparacion,Fecha de creacion,Favorito,Ingredientes
+www.imagen.com,50,20,20-20-20,si,"['asda', 'asdas', 'kg']"

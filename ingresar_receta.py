@@ -30,9 +30,9 @@ class ingresar_receta(Toplevel):
         """WIDGETS"""
         #Titulo - Principal
         self.Cab_principal = ttk.Label(self.F_cab)
-        #Titulo - Datos de la Persona
+        #Titulo - Datos de la receta
         self.Cab_receta = ttk.Label(self.F_rec)
-        #Titulo - Datos de la Cuenta
+        #Titulo - Datos de los ingredientes
         self.Cab_ingredientes = ttk.Label(self.F_ing)
         #Imagen de la receta
         self.imgRec_label = ttk.Label(self.F_rec)
@@ -145,6 +145,7 @@ class ingresar_receta(Toplevel):
         tiempoCoc = self.tiempoCoc_input.get()
         fechaCrea = self.fechaCrea_input.get()
         eti = self.eti_input.get()
+        
         ingredientes=self.Ingresar_ingredientes.ingredientesDevolver()
         print(f"Estos son los ingredientes {self.Ingresar_ingredientes.ingredientesDevolver()}")
         recetas=[img,TiempoPre,tiempoCoc,fechaCrea,eti,ingredientes]
