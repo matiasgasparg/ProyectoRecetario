@@ -11,16 +11,14 @@ from tkinter import Canvas
 
 class ingresar_receta(Toplevel):
     def __init__(self, master=None):
-        Toplevel.__init__(self, master)
+        Toplevel.__init__(self)
         self.master = master # referencia a la ventana ppal
-        self.master.iconify()
-
         self.geometry('430x700')
         self.config(bg = '#056595')
         self.title('Ingresar Receta')
         self.iconbitmap('IMG/cocina2.png')
         self.resizable(0,0)
-        self.Ingresar_ingredientes=Ingresar_ingredientes(self)
+        self.Ingresar_ingredientes=Ingresar_ingredientes()
 
         self.Recetario = Recetario()
         self.Ingredientes = Ingredientes()
@@ -139,9 +137,10 @@ class ingresar_receta(Toplevel):
         self.Cancelar_bott.grid(row = 5, column = 1, padx = 10, pady = 10, ipadx = 5, ipady = 5)
     
     def ingresar_ingredientes(self):
-        ventana=ingresar_receta(self)
+        self.withdraw
+        ventana=Ingresar_ingredientes(self)
         ventana.mainloop()
-    
+
     def Guardar(self):
         img = self.path_text.get(1.0, tk.END).strip()
         TiempoPre = self.tiempoPre_input.get()
@@ -156,8 +155,8 @@ class ingresar_receta(Toplevel):
             mensaje=self.Recetario.guardar(img,TiempoPre,tiempoCoc,fechaCrea,eti)
             messagebox.showinfo('Aviso', mensaje)
             if mensaje == 'Receta registrada exitosamente!':
-                self.Cancelar()
-
+                    self.Cancelar()
+                    
             try:
                 with open('informacion.csv', mode='r', newline='') as file:
                     reader = csv.DictReader(file)
