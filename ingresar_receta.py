@@ -19,6 +19,7 @@ class ingresar_receta(Toplevel):
         self.iconbitmap('IMG/cocina2.png')
         self.resizable(0,0)
         self.Ingresar_ingredientes=Ingresar_ingredientes()
+        self.etiquetas = []
 
         self.Recetario = Recetario()
         self.Ingredientes = Ingredientes()
@@ -94,11 +95,26 @@ class ingresar_receta(Toplevel):
         #Etiquetas
         self.eti_label.config(text = '#Etiquetas', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
         self.eti_input.config(width = 30)
+        self.eti_input.bind('<Return>', self.agregar_etiqueta)
+        self.etiquetas_label = ttk.Label(self.F_rec, text='Etiquetas:', foreground='#FFFFFF', font=('Segoe UI Black', 14), background='#056595')
+        self.etiquetas_value = ttk.Label(self.F_rec, text='#', foreground='#FFFFFF', font=('Segoe UI', 12), background='#056595')
+
         #Botones
         self.ingresarIngrediente_bott.config(text = 'Ingresar Ingredientes', command = self.ingresar_ingredientes)
         self.ingresarReceta_bott.config(text = 'Guardar', command = self.Guardar)
         self.Cancelar_bott.config(text = 'Cancelar', command = self.Cancelar)
+    def agregar_etiqueta(self, event):
+        etiqueta = self.eti_input.get()
+        if etiqueta and etiqueta not in self.etiquetas:
+            if len(self.etiquetas)<3:
+                self.etiquetas.append(etiqueta)
+                self.etiquetas_value.config(text=', '.join(self.etiquetas))
+                self.eti_input.delete(0, 'end')
+            else:            
+                messagebox.showinfo("aviso","Solo se aceptan 3 etiquetas")
 
+        else:
+            messagebox.showinfo("aviso","La etiqueta ya ha sido ingresada")
     def frames_grid(self):
         self.F_cab.grid(row = 0, column = 0, columnspan = 2)
         self.F_rec.grid(row=1, column=0, padx=10, pady=10, sticky='nsew')
@@ -127,10 +143,12 @@ class ingresar_receta(Toplevel):
         self.fechaCrea_label.grid(row = 6, column = 0, pady = 5)
         self.fechaCrea_input.grid(row = 7, column = 0, padx = 10)
         #Etiquetas
-        self.eti_label.grid(row = 6, column = 1, columnspan = 2, pady = 5)
-        self.eti_input.grid(row = 7, column = 1, columnspan = 2)
+        self.eti_label.grid(row=6, column=1, padx=10, pady=5, sticky='w')
+        self.eti_input.grid(row=7, column=1, padx=10, pady=5, sticky='w')
 
-       
+        # Nuevos widgets
+        self.etiquetas_label.grid(row=8, column=0, padx=10, sticky='w')
+        self.etiquetas_value.grid(row=9, column=0, padx=10, sticky='w')
         #Botones
         self.ingresarIngrediente_bott.grid(row = 2, column = 0, columnspan = 2,pady = 5)
         self.ingresarReceta_bott.grid(row = 5, column = 0, padx = 10, pady = 10, ipadx = 5, ipady = 5)
@@ -146,7 +164,7 @@ class ingresar_receta(Toplevel):
         TiempoPre = self.tiempoPre_input.get()
         tiempoCoc = self.tiempoCoc_input.get()
         fechaCrea = self.fechaCrea_input.get()
-        eti = self.eti_input.get()
+        eti = self.etiquetas
         
         ingredientes=self.Ingresar_ingredientes.ingredientesDevolver()
         print(f"Estos son los ingredientes {self.Ingresar_ingredientes.ingredientesDevolver()}")
@@ -156,7 +174,7 @@ class ingresar_receta(Toplevel):
             messagebox.showinfo('Aviso', mensaje)
             if mensaje == 'Receta registrada exitosamente!':
                     self.Cancelar()
-                    
+
             try:
                 with open('informacion.csv', mode='r', newline='') as file:
                     reader = csv.DictReader(file)
@@ -179,11 +197,14 @@ class ingresar_receta(Toplevel):
         self.path_text.insert(tk.END, filename)
 
         # Cargar imagen en el canvas y dimensionarla a 200x200
-        image = Image.open(filename)
-        self.image = ImageTk.PhotoImage(image.resize((200, 200), Image.ANTIALIAS))
-        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
+        try:
+            image = Image.open(filename)
+            self.image = ImageTk.PhotoImage(image.resize((200, 200), Image.ANTIALIAS))
+            self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
+        except AttributeError:
+            mensaje="No seleccionaste ninguna imagen"
+            messagebox.showinfo("Aviso",mensaje)
   
     def Cancelar(self):
         self.destroy()
-        self.master.iconify()
 

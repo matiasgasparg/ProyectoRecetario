@@ -14,11 +14,11 @@ class Ingredientes():
         self.cantidadDeMedida=cantidadDeMedida
 
     def guardar_ingredientes(self,nombre,unidadDeMedidad,cantidadDeMedida):
+        lista=[]
         mensaje=0
         self.nombre_setter(nombre)
         self.unidadDeMedida_setter(unidadDeMedidad)
         self.cantidadDeMedida_setter(cantidadDeMedida)
-    
         return 'Ingrediente registrado exitosamente!'
     def devolver(self):
         nombre=self.nombre
