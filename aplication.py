@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
-from ingresar_receta import ingresar_receta
+#from ingresar_receta import ingresar_receta
 import csv
 from ver_recetas import VerRecetasWindow
-from PIL import ImageTk, Image
+#from PIL import ImageTk, Image
 class MyGUI(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -32,9 +32,9 @@ class MyGUI(tk.Tk):
         #button3.place(x=250,y=400)
 
 
-    def ingresar_receta(self):
-        ventana=ingresar_receta(self)
-        ventana.mainloop()
+    #def ingresar_receta(self):
+        #ventana=ingresar_receta(self)
+        #ventana.mainloop()
         
     def open_ver_recetas(self):
         ventana=VerRecetasWindow(self)
