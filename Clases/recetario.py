@@ -34,7 +34,8 @@ class Recetario (Ingredientes):
         self.etiquetas_setter(etiquetas)
 
         lista=(self.imgDelPlato,self.tiemplDePreparacion,self.tiempoDeCoccion,self.etiquetas)
-        return "Receta Ingresada correctamente"
+        mensaje='Receta registrada exitosamente!'
+        return 'Receta registrada exitosamente!'
     def __str__(self):
         return "Numero de receta: " + self.idreceta +"\n lista de Ingredientes: " + self.listaIngredientes + "\nTiempo de preparación: "+ str(self.tiemplDePreparacion) + "\nTiempo de Cocción: " + str(self.tiempoDeCoccion)+ "\Fecha de Creación: " + str(self.fechaDeCreacion)+ "\nEtiquetas: " + str(self.etiquetas)+ "\Es favorito?: " +self.isfavorito
         

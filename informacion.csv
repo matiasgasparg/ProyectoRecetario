@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 asdsa,dsad,sad,sadsa,sadasd,"['', '', '']"
 asdsa,dsad,sad,sadsa,sadasd,"['', '', '']"
 asd,asdsad,asdasd,asdas,dsaasd,"['sadsad', 'dsad', 'Opcion1']"
@@ -5,3 +6,7 @@ aa,a,a,a,a,"['AS', 'DSADSAD', 'Opcion2']"
 asdsa,dsadsad,asdasd,asd,asdasd,"['asd', 'asdsad', 'kg']"
 jorge,20
 jorge,20
+=======
+Imagen del plato,Tiempo de coccion,Tiempo de preparacion,Fecha de creacion,Favorito,Ingredientes
+C:/Users/walke/OneDrive/Imágenes/20211230_203139.jpg,sdas,sad,aaaaaaaaaaaaaaa,aaaaaaaaaaaaaaaaa,"['Prueba', 'git', 'kg']"
+>>>>>>> 128c05cd4846e8f8cf9d1d059652127b162eaa4b

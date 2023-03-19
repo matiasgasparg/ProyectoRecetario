@@ -1,20 +1,15 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, Toplevel
 from Clases.ingredientes import Ingredientes
-
 class Ingresar_ingredientes(Toplevel):
-    def __init__(self, master=None,base_datos=None):
-        Toplevel.__init__(self, master)
-        self.master = master # referencia a la ventana ppal
+    def __init__(self, master=None):
+        Toplevel.__init__(self,master)
         self.geometry('418x600')
         self.config(bg = '#056595')
         self.title('Ingresar Ingrediente')
-        self.protocol('WM_DELETE_WINDOW', self.Cancelar)
         self.resizable(0,0)
         opciones=["kg","g","cm3","cucharadita/s","Tazas"]
-        self.bdd = base_datos
         self.Ingredientes = Ingredientes()
-
         #Frames
         self.F_cab = tk.Frame(self)         #Cabecera
         self.F_ing = tk.Frame(self)     #Datos del ingrediente
@@ -69,25 +64,25 @@ class Ingresar_ingredientes(Toplevel):
 
         self.ingresarReceta_bott.grid(row = 7, column = 0, padx = 10, pady = 10, ipadx = 5, ipady = 5)
         self.Cancelar_bott.grid(row = 7, column = 1, padx = 10, pady = 10, ipadx = 5, ipady = 5)
- 
     def guardar_ingrediente(self):
         nombre=self.nombre_input.get()
         cantidad=self.cantidad_input.get()
         option=self.option_menu.get()
-        valor=[nombre,cantidad,option]
         if len(nombre) > 0 and len(cantidad) > 0 and len(option) > 0:
             mensaje = self.Ingredientes.guardar_ingredientes(nombre, cantidad, option)
             messagebox.showinfo('Aviso', mensaje)
             if mensaje == 'Ingrediente registrado exitosamente!':
-                self.Cancelar()
-                return valor
+                    self.Cancelar()    
+                    self.master.deiconify()
+
         else:
             messagebox.showerror('Error', 'Debe rellenar todos los campos!')
 
-        print(self.Ingredientes.devolver())
 
     def ingredientesDevolver(self):
         return self.Ingredientes.devolver()
+    def report_callback_exception(self, exc, val, tb):
+        messagebox.showerror("Error", message=str(val))
     def Cancelar(self):
         self.destroy()
-        self.master.deiconify()
+ 
