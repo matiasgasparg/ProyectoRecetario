@@ -1,36 +1,32 @@
+
 import tkinter as tk
 from tkinter import ttk
 from ingresar_receta import ingresar_receta
 import csv
 from ver_recetas import VerRecetasWindow
 from PIL import ImageTk, Image
+
 class MyGUI(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self.title("Recetario")
-        self.geometry("500x500")
-        background_color = "#272026"
-        button_color = "#00b2bc"
-        self['background'] = background_color
-        # Crear una imagen de cocina
-        canvas = tk.Canvas(self, width=500, height=200, bg=background_color)
-        image_file = tk.PhotoImage(file="IMG/cocina4.png")
-        canvas.create_image(0, -10, anchor="nw", image=image_file)
-        canvas.pack()
-        canvas.image= image_file # Mantener una referencia a la imagen para evitar que sea eliminada por Python
-     
-        # Crear dos botones
-        button1 = tk.Button(self.master, text="Ingresar Receta", command=self.ingresar_receta)
-        button2 = tk.Button(self.master, text="Ver todas las Recetas", command=self.open_ver_recetas)
-        #img_boton = tk.PhotoImage(file="cocina3.png")
-        #button3 = tk.Button(text="Buscar archivo", image=img_boton, compound=tk.TOP)
+        self.geometry("460x613")
+        self.resizable(False,False)
+        self.title("Cookbook")
+        self.fondo = tk.PhotoImage(file="IMG/fondo_titulo.png")
+        self.icono = tk.PhotoImage(file= "IMG/cubiertos.png")
+        self.iconphoto(True,self.icono)
+        self.frame = tk.Frame(self)
+        self.frame.pack(expand=True,fill="both")
 
-        # Posicionar la imagen y los botones
-        canvas.pack(side=tk.TOP)
-        button1.place(x=150,y=300)
-        button2.place(x=250,y=300)
-        #button3.place(x=250,y=400)
-
+        self.lblfondo = tk.Label(self.frame,image=self.fondo)
+        self.lblfondo.pack(expand=True,fill="both")
+        self.frame1 = tk.Frame(self.frame)
+        self.boton = ttk.Button(self.lblfondo,text="Ingresar recetas",command=self.ingresar_receta,padding=10)
+        self.boton2 = ttk.Button(self.lblfondo,text="Ver todas las recetas",command=self.open_ver_recetas,padding=10)
+        self.boton_salida = ttk.Button(self.lblfondo,text="Salir",padding=10, command=self.destroy)
+        self.boton_salida.pack(pady=60,side=tk.BOTTOM)
+        self.boton2.pack(pady=25,side=tk.BOTTOM)
+        self.boton.pack(pady=50,side=tk.BOTTOM)
 
     def ingresar_receta(self):
         ventana=ingresar_receta(self)

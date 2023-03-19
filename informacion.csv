@@ -1,6 +1,2 @@
-Imagen del plato,Tiempo de coccion,Tiempo de preparacion,Fecha de creacion,Favorito,Ingredientes
-C:/Users/walke/OneDrive/Imï¿½genes/20211230_203139.jpg,sdas,sad,aaaaaaaaaaaaaaa,aaaaaaaaaaaaaaaaa,"['Prueba', 'git', 'kg']"
-,asdsa,dasdsad,sads,sadsad,"[{'nombre': 'asdasds', 'cantidad': 'dsaddas', 'unidad_medida': 'kg'}, {'nombre': 'asdsa', 'cantidad': 'dasdas', 'unidad_medida': 'cm3'}, {'nombre': 'sd', 'cantidad': 'asdsad', 'unidad_medida': 'Tazas'}]"
-,asdsad,dasd,asdasd,asd,"[{'nombre': 'asd', 'cantidad': 'dsad', 'unidad_medida': 'kg'}, {'nombre': 'asd', 'cantidad': 'dsad', 'unidad_medida': 'kg'}, {'nombre': 'sadas', 'cantidad': 'asd', 'unidad_medida': 'kg'}]"
-C:/Users/walke/OneDrive/Imágenes/20211230_203139.jpg,asd,asdsad,asdasd,asd,"[{'nombre': 'asd', 'cantidad': 'dsad', 'unidad_medida': 'kg'}]"
-C:/Users/walke/OneDrive/Imágenes/20211230_203139.jpg,ASDASD,ASDSAD,ASDASD,"['hola', 'SDASD', 'XCXZC']","[{'nombre': 'asaa', 'cantidad': 'aaaa', 'unidad_medida': 'kg'}, {'nombre': 'asaa', 'cantidad': 'aaaaxx', 'unidad_medida': 'kg'}]"
+Imagen del plato,Tiempo de coccion,Tiempo de preparacion,Fecha de creacion,Etiquetas,Ingredientes
+C:\Users\walke\Downloads\casa.png,asdasd,asdasda,2023-03-19,"['sa', 'a']","[{'nombre': 'aaaaaaaaaa', 'cantidad': 'aaaaaaaaaaaaaaa', 'unidad_medida': 'g'}]"

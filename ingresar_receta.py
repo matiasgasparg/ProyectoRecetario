@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import Tk, Button, Label
 from tkinter import filedialog
 from tkinter import ttk, messagebox, Toplevel
 from Clases.recetario import Recetario
@@ -8,6 +7,8 @@ from Clases.ingredientes import Ingredientes
 import csv
 from PIL import Image, ImageTk
 from tkinter import Canvas
+from datetime import datetime
+import datetime
 
 class ingresar_receta(Toplevel):
     def __init__(self, master=None):
@@ -86,11 +87,15 @@ class ingresar_receta(Toplevel):
         #Tiempo de preparacion
         self.tiempoPre_label.config(text = 'Tiempo de preparación', foreground = '#FFFFFF', font = ('Segoe UI Black', 13), background = '#056595')
         self.tiempoPre_input.config(width = 30)
+
+
         #Tiempo de cocción
         self.tiempoCoc_label.config(text = 'Tiempo de Cocción', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
         self.tiempoCoc_input.config(width = 30)
         #Fecha de creación
         self.fechaCrea_label.config(text = 'Fecha de creación', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
+        now = datetime.datetime.now()
+        self.fechaCrea_input.insert(0,now.strftime("%Y-%m-%d"))
         self.fechaCrea_input.config(width = 30)
         #Etiquetas
         self.eti_label.config(text = '#Etiquetas', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')

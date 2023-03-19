@@ -2,9 +2,14 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import font,messagebox
 import csv
+import urllib.request
+
 class VerRecetasWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
+        self.img_refs = []
+        self.image_label = tk.Label(self)
+        self.image_label.pack(side=tk.BOTTOM, pady=10)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
         self.columnconfigure(2, weight=0) 
@@ -38,14 +43,16 @@ class VerRecetasWindow(tk.Toplevel):
 
         # Carga archivo CSV
         self.load_csv('informacion.csv')
-        
+
+
+
     def load_csv(self, filename):
         # Leer archivo CSV
         with open(filename, newline='') as csvfile:
             reader = csv.reader(csvfile)
-            # Obtiene encabezados
+        # Obtiene encabezados
             headers = next(reader)
-            # Configura encabezados del Treeview
+        # Configura encabezados del Treeview
             self.columns = headers
             self.treeview['columns'] = headers
             self.treeview.heading('#0', text='Índice')
@@ -53,10 +60,17 @@ class VerRecetasWindow(tk.Toplevel):
                 self.treeview.heading(header, text=header)
                 self.treeview.column(header, anchor='center',minwidth=0, width=font.Font().measure(header))  # Agregar esta línea
 
-            # Agrega datos al Treeview
+        # Agrega datos al Treeview
             for i, row in enumerate(reader):
                 self.treeview.insert(parent='', index='end', iid=i, text=str(i), values=row)
-                
+            # Obtener la URL de la imagen de la columna Imagen
+                img_url = row[0]  # asumiendo que la columna Imagen es la última columna
+            # Mostrar imagen en la etiqueta
+                img = tk.PhotoImage(file=img_url)
+                self.image_label.configure(image=img)
+                self.image_label.image = img  # Guarda una referencia a la imagen para evitar que sea eliminada por el garbage collector
+
+          
     def delete_selected(self):
         # Checkea si un item esta seleccionado
         if self.treeview.selection():
