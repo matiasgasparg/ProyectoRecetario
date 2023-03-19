@@ -1,18 +1,23 @@
 import tkinter as a
 from tkinter import ttk
 vent = a.Tk()
-vent.geometry("450x500")
+vent.geometry("460x613")
 vent.resizable(False,False)
-fondo = a.PhotoImage(file="IMG/fondo2.png")
-titulo = a.PhotoImage(file = "IMG/cocina4.png")
+vent.title("Cookbook")
+fondo = a.PhotoImage(file="IMG/fondo_titulo.png")
+icono = a.PhotoImage(file= "IMG/cubiertos.png")
+vent.iconphoto(True,icono)
 frame = a.Frame(vent)
 frame.pack(expand=True,fill="both")
 
 lblfondo = a.Label(frame,image=fondo)
 lblfondo.pack(expand=True,fill="both")
 frame1 = a.Frame(frame)
-boton = a.Button(lblfondo,text="boton largo")
-boton.pack(padx=200,pady=200,side=a.BOTTOM,)
-
+boton = ttk.Button(lblfondo,text ="Ingresar recetas",padding=10)
+boton2 = ttk.Button(lblfondo,text="Ver todas las recetas",padding=10)
+boton_salida = ttk.Button(lblfondo,text="Salir",padding=10)
+boton_salida.pack(pady=60,side=a.BOTTOM)
+boton2.pack(pady=25,side=a.BOTTOM)
+boton.pack(pady=50,side=a.BOTTOM)
 
 vent.mainloop()
