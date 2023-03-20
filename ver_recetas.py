@@ -3,11 +3,13 @@ import tkinter.ttk as ttk
 from tkinter import font,messagebox
 import csv
 import urllib.request
+from PIL import Image, ImageTk
 
 class VerRecetasWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.img_refs = []
+        self.geometry('780x800')
         self.image_label = tk.Label(self)
         self.image_label.pack(side=tk.BOTTOM, pady=10)
         self.columnconfigure(0, weight=1)
@@ -18,8 +20,9 @@ class VerRecetasWindow(tk.Toplevel):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
         self.minsize(400, 200)  # seteamos un tamaño minimo
+
         self.title("Todas las Recetas")
-        self.configure(bg='#056595')
+        self.configure(bg='#056595')            
         self.columns = []
          # Configura estilo para el Treeview
 
@@ -30,15 +33,27 @@ class VerRecetasWindow(tk.Toplevel):
         self.treeview.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
     
 
+        # Crear Scrollbar horizontal
+        self.treeview_scrollbar_x = ttk.Scrollbar(self.treeview, orient='horizontal', command=self.treeview.xview)
+        self.treeview_scrollbar_x.pack(side=tk.BOTTOM, fill=tk.X)
+        
+        # Vincular Scrollbar horizontal al Treeview
+        self.treeview.configure(xscrollcommand=self.treeview_scrollbar_x.set)
         # Aplica estilo al Treeview
         self.treeview.configure(style="Custom.Treeview")
         # Crea botón de eliminar
         self.delete_button = tk.Button(self, text="Eliminar", command=self.delete_selected)
         self.delete_button.pack(side=tk.BOTTOM, padx=10, pady=10)
+        #Creacion del botón buscar
+        self.search_button = tk.Button(self, text="Buscar", command=self.search)
+        self.search_entry=tk.Entry(self,text="Buscar por nombre")
+        self.search_entry.pack(side=tk.BOTTOM,padx=10,pady=10)
 
+        self.search_button.pack(side=tk.TOP, padx=10, pady=10)
         # Crea botón de modificar
         self.modify_button = tk.Button(self, text="Modificar", command=self.modify_selected)
         self.modify_button.pack(side=tk.BOTTOM, padx=10, pady=10)
+        self.treeview.bind("<<TreeviewSelect>>", self.on_select)
 
 
         # Carga archivo CSV
@@ -56,21 +71,33 @@ class VerRecetasWindow(tk.Toplevel):
             self.columns = headers
             self.treeview['columns'] = headers
             self.treeview.heading('#0', text='Índice')
+
+
             for header in headers:
                 self.treeview.heading(header, text=header)
                 self.treeview.column(header, anchor='center',minwidth=0, width=font.Font().measure(header))  # Agregar esta línea
-
+        
         # Agrega datos al Treeview
             for i, row in enumerate(reader):
                 self.treeview.insert(parent='', index='end', iid=i, text=str(i), values=row)
-            # Obtener la URL de la imagen de la columna Imagen
-                img_url = row[0]  # asumiendo que la columna Imagen es la última columna
-            # Mostrar imagen en la etiqueta
-                img = tk.PhotoImage(file=img_url)
-                self.image_label.configure(image=img)
-                self.image_label.image = img  # Guarda una referencia a la imagen para evitar que sea eliminada por el garbage collector
-
-          
+                
+        # Obtener la URL de la imagen de la columna Imagen
+                img_url = row[1]
+        # Cargar imagen y guardar su referencia
+                img = Image.open(img_url)
+                img = img.resize((200, 200), Image.ANTIALIAS)
+                img = ImageTk.PhotoImage(img)
+                self.img_refs.append(img)
+    def on_select(self, event):
+        selected_item = self.treeview.selection()
+        if selected_item:
+        # Obtener el índice de la fila seleccionada
+            index = int(self.treeview.item(selected_item)['text'])
+        # Obtener la imagen correspondiente a la fila seleccionada
+            img = self.img_refs[index]
+        # Mostrar la imagen en la etiqueta de imagen
+            self.image_label.configure(image=img)
+            self.image_label.image = img  # Guarda una referencia a la imagen para evitar que sea eliminada por el garbage collector         
     def delete_selected(self):
         # Checkea si un item esta seleccionado
         if self.treeview.selection():
@@ -139,3 +166,28 @@ class VerRecetasWindow(tk.Toplevel):
                     writer.writerow(row)
         # Cierra ventana de diálogo
         dialog.destroy()
+    def search(self):
+        # Obtener el texto ingresado por el usuario
+        query = self.search_entry.get().lower()
+        # Obtener los índices de las columnas de etiquetas y nombres
+        tags_col = self.columns.index('Etiquetas')
+        name_col = self.columns.index('Nombre')
+        # Eliminar los elementos actuales del Treeview
+        self.treeview.delete(*self.treeview.get_children())
+        # Leer archivo CSV
+        with open('informacion.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            # Ignorar la primera fila (encabezados)
+            next(reader)
+            # Recorrer las filas del archivo CSV
+            for i, row in enumerate(reader):
+            # Obtener las etiquetas de la fila actual
+                tags = row[tags_col].lower().split(', ')
+            # Obtener el nombre de la fila actual
+                name = row[name_col].lower()
+            # Verificar si la fila actual coincide con la búsqueda
+                if query in tags or query in name:
+                # Agregar la fila actual al Treeview
+                    self.treeview.insert('', 'end', text=str(i), values=row)
+        self.search_entry.delete(0,'end')
+        

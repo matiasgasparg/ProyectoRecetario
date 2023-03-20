@@ -1,2 +1,2 @@
-Imagen del plato,Tiempo de coccion,Tiempo de preparacion,Fecha de creacion,Etiquetas,Ingredientes
-C:\Users\walke\Downloads\casa.png,asdasd,asdasda,2023-03-19,"['sa', 'a']","[{'nombre': 'aaaaaaaaaa', 'cantidad': 'aaaaaaaaaaaaaaa', 'unidad_medida': 'g'}]"
+Nombre,Imagen,Tiempo de preparacion,Tiempo de coccion,Fecha de creacion,Etiquetas,Favoritos,Ingredientes
+Prueba,C:/Users/walke/OneDrive/Documentos/7e0120f7591e3ce2843851c65dbd6e1c.jpg,20,30,2023-03-20,"['Dulce', 'Salado']",True,"[{'nombre': 'Leche', 'cantidad': '100', 'unidad_medida': 'kg'}, {'nombre': 'Azucar', 'cantidad': '20000', 'unidad_medida': 'Tazas'}]"

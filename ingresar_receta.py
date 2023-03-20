@@ -11,35 +11,41 @@ from datetime import datetime
 import datetime
 
 class ingresar_receta(Toplevel):
-    def __init__(self, master=None):
-        Toplevel.__init__(self)
+    def __init__(self, master):
+        Toplevel.__init__(self)     
         self.master = master # referencia a la ventana ppal
-        self.geometry('430x700')
+        self.geometry('780x800')
         self.config(bg = '#056595')
         self.title('Ingresar Receta')
-        self.iconbitmap('IMG/cocina2.png')
+        self.icono = tk.PhotoImage(file= "IMG/cubiertos.png")
+        self.mostrar_ventana = None
+        self.treeview = None
         self.resizable(0,0)
-        self.Ingresar_ingredientes=Ingresar_ingredientes()
         self.etiquetas = []
+        self.ingredientes=[]
+
+        opciones=["kg","g","cm3","cucharadita/s","Tazas"]
 
         self.Recetario = Recetario()
         self.Ingredientes = Ingredientes()
         
         """FRAMES"""
         self.F_cab = tk.Frame(self)         #Cabecera
+        self.F_img=tk.Frame(self) #Imagen
         self.F_rec = tk.Frame(self)     #Datos de la Receta
-        self.F_ing = tk.Frame(self)      #Ingredientes
         self.F_boton = tk.Frame(self)       #Botones
 
         """WIDGETS"""
         #Titulo - Principal
         self.Cab_principal = ttk.Label(self.F_cab)
-        #Titulo - Datos de los ingredientes
-        self.Cab_ingredientes = ttk.Label(self.F_ing)
+
+        #Nombre de la receta
+        self.nombreReceta_label=ttk.Label(self.F_img)
+        self.nombreReceta_input=ttk.Entry(self.F_img)
         #Imagen de la receta
-        self.imgRec_label = ttk.Label(self.F_rec)
-        self.path_text = tk.Text(self.F_rec)
-        self.canvas = Canvas(self.F_rec)
+        self.imgRec_label = ttk.Label(self.F_img)
+        self.path_text = tk.Text(self.F_img)
+        self.canvas = Canvas(self.F_img)
         #Tiempo de preparación
         self.tiempoPre_label = ttk.Label(self.F_rec)
         self.tiempoPre_input = ttk.Entry(self.F_rec)
@@ -52,14 +58,23 @@ class ingresar_receta(Toplevel):
         #Etiquetas
         self.eti_label = ttk.Label(self.F_rec)
         self.eti_input = ttk.Entry(self.F_rec)
-        #Ingredientes
-
-        #Botones
-        self.upload_button = tk.Button(self.F_rec)
-        self.ingresarIngrediente_bott=ttk.Button(self.F_boton)
+        #Favoritos
+        self.fav_label=ttk.Label(self.F_rec)
+        self.fav_checkbutton=ttk.Checkbutton(self.F_rec)
+        #Botones de la receta
+        self.upload_button = tk.Button(self.F_img)
         self.ingresarReceta_bott = ttk.Button(self.F_boton)
         self.Cancelar_bott = ttk.Button(self.F_boton)
-
+        #Ingredientes
+        self.nombre_input=ttk.Entry(self.F_rec)
+        self.nombre_label=ttk.Label(self.F_rec)
+        self.cantidad_label=ttk.Label(self.F_rec)
+        self.cantidad_input=ttk.Entry(self.F_rec)
+        self.option_menu_label=ttk.Label(self.F_rec)
+        self.option_menu = ttk.Combobox(self.F_rec, values=opciones)
+        #Botones de ingredientes
+        self.Mostrar_bott = ttk.Button(self.F_rec)
+        self.MostraIng_bott=ttk.Button(self.F_rec)
         self.frames_config()
         self.widgets_config()
 
@@ -70,24 +85,25 @@ class ingresar_receta(Toplevel):
 
     def frames_config(self):
         self.F_cab.config(border = 15, bg = '#002B40')
+        self.F_img.config(bg = '#056595')
         self.F_rec.config(bg = '#056595')
-        self.F_ing.config(bg = '#056595')
         self.F_boton.config(bg = '#056595')
     
     def widgets_config(self):
         #Titulo - Principal
-        self.Cab_principal.config(text = 'Ingresá tu receta!', foreground = '#FFFFFF', font = ('Segoe UI Black', 25), background = '#002B40', justify='center')
+        self.Cab_principal.config(text = '------------------Ingresá tu receta!-----------------------', foreground = '#FFFFFF', font = ('Segoe UI Black', 24), background = '#002B40')
         #Titulo - Ingredientes
-        self.Cab_ingredientes.config(text = 'Ingredientes', foreground = '#FFFFFF', font = ('Segoe UI Black', 24), background = '#002B40')
+        #Nombre de la receta
+        self.nombreReceta_label.config(text = 'Nombre de la receta', foreground = '#FFFFFF', font = ('Segoe UI Black', 13), background = '#056595')
+        self.nombreReceta_input.config(width=30)
         #Imagen de la receta
         self.imgRec_label.config(text = 'Imagen de la receta', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
-        self.canvas.config(width=150, height=150)
+        self.canvas.config(width=200, height=200)
         self.upload_button.config(text="Subir imagen", command=self.upload_image)
         self.image = None # Variable para almacenar la imagen cargada
         #Tiempo de preparacion
         self.tiempoPre_label.config(text = 'Tiempo de preparación', foreground = '#FFFFFF', font = ('Segoe UI Black', 13), background = '#056595')
         self.tiempoPre_input.config(width = 30)
-
 
         #Tiempo de cocción
         self.tiempoCoc_label.config(text = 'Tiempo de Cocción', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
@@ -98,16 +114,31 @@ class ingresar_receta(Toplevel):
         self.fechaCrea_input.insert(0,now.strftime("%Y-%m-%d"))
         self.fechaCrea_input.config(width = 30)
         #Etiquetas
-        self.eti_label.config(text = '#Etiquetas', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
+        self.eti_label.config(text = 'Etiquetas', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
         self.eti_input.config(width = 30)
         self.eti_input.bind('<Return>', self.agregar_etiqueta)
         self.etiquetas_label = ttk.Label(self.F_rec, text='Etiquetas:', foreground='#FFFFFF', font=('Segoe UI Black', 14), background='#056595')
         self.etiquetas_value = ttk.Label(self.F_rec, text='#', foreground='#FFFFFF', font=('Segoe UI', 12), background='#056595')
+        #Favorito
+        self.fav_label.config(text = 'Favorito?', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
+        self.favorito_var = tk.BooleanVar()
+        self.fav_checkbutton.config(text="SI",width=10,offvalue=False,variable=self.favorito_var)
 
+        #Ingredientes
+        self.nombre_label.config(text = 'Nombre del ingrediente', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
+        self.nombre_input.config(width = 30)
+        self.cantidad_label.config(text = 'Cantidad del ingrediente', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
+        self.cantidad_input.config(width = 30)
+    
+        self.option_menu_label.config(text = 'Unidad de Medida', foreground = '#FFFFFF', font = ('Segoe UI Black', 10), background = '#002B40')
+        self.option_menu.config(width=10)            
+        self.Mostrar_bott.config(text = 'Agregar Ingrediente!', command=self.guardar_datos)
+        self.MostraIng_bott.config(text='Ver mis ingredientes', command=self.mostrar_datos)
         #Botones
-        self.ingresarIngrediente_bott.config(text = 'Ingresar Ingredientes', command = self.ingresar_ingredientes)
+
         self.ingresarReceta_bott.config(text = 'Guardar', command = self.Guardar)
         self.Cancelar_bott.config(text = 'Cancelar', command = self.Cancelar)
+
     def agregar_etiqueta(self, event):
         etiqueta = self.eti_input.get()
         if etiqueta and etiqueta not in self.etiquetas:
@@ -120,76 +151,92 @@ class ingresar_receta(Toplevel):
 
         else:
             messagebox.showinfo("aviso","La etiqueta ya ha sido ingresada")
+
+
+
     def frames_grid(self):
-        self.F_cab.grid(row = 0, column = 0, columnspan = 2)
-        self.F_rec.grid(row=1, column=0, padx=10, pady=10, sticky='nsew')
-        self.F_ing.grid(row = 2, column = 0, columnspan = 2, pady = 20)
-        self.F_boton.grid(row = 3, column = 0, columnspan = 2)
+        self.F_cab.grid(row = 0, column = 0, columnspan = 100,sticky="ew")
+        self.F_img.grid(row=1,column=0)
+        self.F_rec.grid(row=2, column=0)
+        self.F_boton.grid(row = 3, columnspan = 3)
 
     def widgets_grid(self):
         #Titulo - Principal
         self.Cab_principal.grid(row = 0)
-        #Titulo - Ingredientes
-        self.Cab_ingredientes.grid(row = 0, columnspan= 2)
         #Imagen
-        self.imgRec_label.grid(row = 1, columnspan= 2, pady = 5)
+        self.imgRec_label.grid(row = 1, column=0, pady = 5)
         #Boton de subir imagen
-        self.upload_button.grid(row = 2, columnspan = 2, padx = 10,pady=5)
+        self.upload_button.grid(row = 2, column = 0, padx = 10,pady=5)
         #Espacio para la imagen
-        self.canvas.grid(row=3,columnspan=2,padx=10)
-
+        self.canvas.grid(row=4,column=0,padx=10)
+        #Nombre de la receta
+        self.nombreReceta_label.grid(row=5,columnspan=2,pady=5)
+        self.nombreReceta_input.grid(row=6,columnspan=2,padx=10)
         #Tiempo de Preparación
-        self.tiempoPre_label.grid(row = 4, column = 0, pady = 5)
-        self.tiempoPre_input.grid(row = 5, column = 0, padx = 10)
+        self.tiempoPre_label.grid(row = 7, column = 0, pady = 5)
+        self.tiempoPre_input.grid(row = 8, column = 0, padx = 10)
         #Tiempo de Cocción
-        self.tiempoCoc_label.grid(row = 4, column = 1, pady = 5)
-        self.tiempoCoc_input.grid(row = 5, column = 1, padx = 10)
+        self.tiempoCoc_label.grid(row = 7, column = 1, pady = 5)
+        self.tiempoCoc_input.grid(row = 8, column = 1, padx = 10)
         #Fecha de creación
-        self.fechaCrea_label.grid(row = 6, column = 0, pady = 5)
-        self.fechaCrea_input.grid(row = 7, column = 0, padx = 10)
+        self.fechaCrea_label.grid(row =9, column = 0, pady = 5)
+        self.fechaCrea_input.grid(row = 10, column = 0, padx = 10)
         #Etiquetas
-        self.eti_label.grid(row=6, column=1, padx=10, pady=5, sticky='w')
-        self.eti_input.grid(row=7, column=1, padx=10, pady=5, sticky='w')
-
-        # Nuevos widgets
-        self.etiquetas_label.grid(row=8, column=0, padx=10, sticky='w')
-        self.etiquetas_value.grid(row=9, column=0, padx=10, sticky='w')
-        #Botones
-        self.ingresarIngrediente_bott.grid(row = 2, column = 0, columnspan = 2,pady = 5)
-        self.ingresarReceta_bott.grid(row = 5, column = 0, padx = 10, pady = 10, ipadx = 5, ipady = 5)
-        self.Cancelar_bott.grid(row = 5, column = 1, padx = 10, pady = 10, ipadx = 5, ipady = 5)
+        self.eti_label.grid(row=9, column=1, padx=10, pady=5)
+        self.eti_input.grid(row=10, column=1, padx=10, pady=5)
     
-    def ingresar_ingredientes(self):
-        self.withdraw
-        ventana=Ingresar_ingredientes(self)
-        ventana.mainloop()
+        # Etiqueta output
+        self.etiquetas_label.grid(row=11, column=0, padx=10, sticky='w')
+        self.etiquetas_value.grid(row=12, column=0, padx=10, sticky='w')
+        #Favorito
+
+        #Botones
+        self.ingresarReceta_bott.grid(row = 6, column = 0, padx = 10, pady = 10, ipadx = 5, ipady = 5)
+        self.Cancelar_bott.grid(row = 6, column = 1, padx = 10, pady = 10, ipadx = 5, ipady = 5)
+        #Ingredientes
+
+
+        self.nombre_label.grid(row =7, column = 4, pady = 5)
+        self.nombre_input.grid(row = 8, column = 4,padx = 10)
+        self.cantidad_label.grid(row =9, column = 4, pady = 5)
+        self.cantidad_input.grid(row = 10, column = 4, padx = 10)
+        self.fav_label.grid(row=7,column=5,pady=5)
+        self.fav_checkbutton.grid(row=8,column=5,padx=10)
+        self.option_menu_label.grid(row = 9, column = 5, pady = 5)
+        self.option_menu.grid(row = 10, column = 5, padx = 10)
+        self.Mostrar_bott.grid(row = 11,column=4)
+        self.MostraIng_bott.grid(row=11,column=5)
+    
 
     def Guardar(self):
+        nombre=self.nombreReceta_input.get()
         img = self.path_text.get(1.0, tk.END).strip()
         TiempoPre = self.tiempoPre_input.get()
         tiempoCoc = self.tiempoCoc_input.get()
         fechaCrea = self.fechaCrea_input.get()
         eti = self.etiquetas
+        fav=self.favorito_var.get()           
+        ingredientes=self.ingredientesDevolver()
+        print(f"Estos son los ingredientes {self.ingredientesDevolver()}")
         
-        ingredientes=self.Ingresar_ingredientes.ingredientesDevolver()
-        print(f"Estos son los ingredientes {self.Ingresar_ingredientes.ingredientesDevolver()}")
         recetas=[img,TiempoPre,tiempoCoc,fechaCrea,eti,ingredientes]
-        if len(TiempoPre) > 0 and len(tiempoCoc) > 0 and len(fechaCrea) > 0 and len(eti) > 0 and len(ingredientes) > 0:
-            mensaje=self.Recetario.guardar(img,TiempoPre,tiempoCoc,fechaCrea,eti)
+        if len(nombre)>0 and len(TiempoPre) > 0 and len(tiempoCoc) > 0 and len(fechaCrea) > 0 and len(eti) > 0 and len(ingredientes) > 0:
+            mensaje=self.Recetario.guardar(nombre,img,TiempoPre,tiempoCoc,fechaCrea,eti,fav)
             messagebox.showinfo('Aviso', mensaje)
             if mensaje == 'Receta registrada exitosamente!':
                     self.Cancelar()
-
-            try:
-                with open('informacion.csv', mode='r', newline='') as file:
-                    reader = csv.DictReader(file)
-                    for row in reader:
-                        recetas.append(row)
-            except FileNotFoundError:
-                pass
-            with open('informacion.csv', mode='a', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow([img, TiempoPre,tiempoCoc,fechaCrea,eti,ingredientes])
+            fieldnames = ["Nombre", "Imagen", "Tiempo de preparacion", "Tiempo de coccion", "Fecha de creacion", "Etiquetas", "Favoritos", "Ingredientes"]
+        try:
+            with open('informacion.csv', mode='r', newline='') as file:
+                reader = csv.DictReader(file, fieldnames=fieldnames)
+                next(reader)  # saltar la primera fila con los nombres de las columnas
+                recetas = list(reader)
+        except FileNotFoundError:
+            recetas = []
+            with open('informacion.csv', mode='w', newline='') as file:
+                writer = csv.DictWriter(file, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows([{'Nombre': nombre, 'Imagen': img, 'Tiempo de preparacion': TiempoPre, 'Tiempo de coccion': tiempoCoc, 'Fecha de creacion': fechaCrea, 'Etiquetas': eti, 'Favoritos': fav, 'Ingredientes': ingredientes}] + recetas)
         else:
      
             messagebox.showerror('Error', 'Debe rellenar todos los campos!')
@@ -209,7 +256,66 @@ class ingresar_receta(Toplevel):
         except AttributeError:
             mensaje="No seleccionaste ninguna imagen"
             messagebox.showinfo("Aviso",mensaje)
-  
+    def guardar_datos(self):
+            nombre = self.nombre_input.get()
+            cantidad = self.cantidad_input.get()
+            unidad_medida = self.option_menu.get()
+
+        # Validar que se ingresaron todos los datos
+            if not (nombre and cantidad and unidad_medida):
+                messagebox.showerror('Error', 'Debe ingresar todos los datos')
+                return
+        # Crear un diccionario con los datos del ingredient
+            else:
+                messagebox.showinfo("aviso","El ingrediente se ha agregado correctamente,agregue otro!")
+                ingrediente = {'nombre': nombre, 'cantidad': cantidad, 'unidad_medida': unidad_medida}
+
+            # Agregar el ingrediente a la lista
+                self.ingredientes.append(ingrediente)
+                self.nombre_input.delete(0, 'end')
+                self.cantidad_input.delete(0, 'end')
+                self.option_menu.delete(0, 'end')
+                
+            
+
+    def ingredientesDevolver(self):
+        a=self.ingredientes
+        return a
+    def report_callback_exception(self, exc, val, tb):
+        messagebox.showerror("Error", message=str(val))
+    def Cancelar(self):
+            self.destroy()
+    def mostrar_datos(self):
+        # Creamos una nueva ventana para mostrar los datos
+        self.mostrar_ventana = tk.Toplevel(self)
+        self.mostrar_ventana.geometry('500x300')
+        self.mostrar_ventana.title('Mostrar datos')
+        self.mostrar_ventana.config(bg='#056595')
+
+        # Creamos un treeview para mostrar los datos en una tabla
+        self.treeview = ttk.Treeview(self.mostrar_ventana, columns=('nombre', 'Cantidad', 'unidad_medida'))
+        self.treeview.heading('#0', text='Index')
+        self.treeview.heading('#1', text='nombre')
+        self.treeview.heading('#2', text='cantidad')
+        self.treeview.heading('#3', text='unidad_medida')
+
+        # Agregamos los datos a la tabla
+        index = 1
+        for ingrediente in self.ingredientes:
+            self.treeview.insert(parent='', index='end', iid=index, text=index, values=(ingrediente['nombre'], ingrediente['cantidad'], ingrediente['unidad_medida']))
+            index += 1
+
+        # Ajustamos las columnas
+        self.treeview.column('#0', width=50)
+        self.treeview.column('#1', width=200)
+        self.treeview.column('#2', width=100)
+        self.treeview.column('#3', width=100)
+
+        # Agregamos la tabla a la ventana
+        self.treeview.pack(padx=10, pady=10)
+
+
+
     def Cancelar(self):
         self.destroy()
 
