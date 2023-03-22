@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk, messagebox, Toplevel
 from Clases.recetario import Recetario
-from ingresar_ingredientes import Ingresar_ingredientes
 from Clases.ingredientes import Ingredientes
 import csv
 from PIL import Image, ImageTk
@@ -240,6 +239,7 @@ class ingresar_receta(Toplevel):
         else:
      
             messagebox.showerror('Error', 'Debe rellenar todos los campos!')
+            
     def upload_image(self):
         # Abrir cuadro de diálogo para seleccionar archivo de imagen
         filename = filedialog.askopenfilename(initialdir="/", title="Seleccionar imagen", filetypes=(("Archivos de imagen", "*.jpg;*.jpeg;*.png"), ("Todos los archivos", "*.*")))
