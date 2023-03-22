@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 asdsa,dsad,sad,sadsa,sadasd,"['', '', '']"
 asdsa,dsad,sad,sadsa,sadasd,"['', '', '']"
 asd,asdsad,asdasd,asdas,dsaasd,"['sadsad', 'dsad', 'Opcion1']"
@@ -10,3 +11,7 @@ jorge,20
 Imagen del plato,Tiempo de coccion,Tiempo de preparacion,Fecha de creacion,Favorito,Ingredientes
 C:/Users/walke/OneDrive/Imágenes/20211230_203139.jpg,sdas,sad,aaaaaaaaaaaaaaa,aaaaaaaaaaaaaaaaa,"['Prueba', 'git', 'kg']"
 >>>>>>> 128c05cd4846e8f8cf9d1d059652127b162eaa4b
+=======
+Nombre,Imagen,Tiempo de preparacion,Tiempo de coccion,Fecha de creacion,Etiquetas,Favoritos,Ingredientes
+Prueba,C:/Users/walke/OneDrive/Documentos/7e0120f7591e3ce2843851c65dbd6e1c.jpg,20,30,2023-03-20,"['Dulce', 'Salado']",True,"[{'nombre': 'Leche', 'cantidad': '100', 'unidad_medida': 'kg'}, {'nombre': 'Azucar', 'cantidad': '20000', 'unidad_medida': 'Tazas'}]"
+>>>>>>> 98294e91ad68fb6f77211194803818e1ea77ee82
