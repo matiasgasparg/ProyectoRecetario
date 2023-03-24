@@ -8,12 +8,12 @@ from PIL import Image, ImageTk
 from tkinter import Canvas
 from datetime import datetime
 import datetime
-
+import os
 class ingresar_receta(Toplevel):
     def __init__(self, master):
         Toplevel.__init__(self)     
         self.master = master # referencia a la ventana ppal
-        self.geometry('780x800')
+        self.geometry('790x800')
         self.config(bg = '#056595')
         self.title('Ingresar Receta')
         self.icono = tk.PhotoImage(file= "IMG/cubiertos.png")
@@ -22,7 +22,7 @@ class ingresar_receta(Toplevel):
         self.resizable(0,0)
         self.etiquetas = []
         self.ingredientes=[]
-
+        self.pasos=[]
         opciones=["kg","g","cm3","cucharadita/s","Tazas"]
 
         self.Recetario = Recetario()
@@ -41,6 +41,10 @@ class ingresar_receta(Toplevel):
         #Nombre de la receta
         self.nombreReceta_label=ttk.Label(self.F_img)
         self.nombreReceta_input=ttk.Entry(self.F_img)
+        #Pasos de la receta
+        self.pasosReceta_label=ttk.Label(self.F_img)
+        self.pasosReceta_input=ttk.Entry(self.F_img)
+        self.pasosReceta_button=ttk.Button(self.F_img)
         #Imagen de la receta
         self.imgRec_label = ttk.Label(self.F_img)
         self.path_text = tk.Text(self.F_img)
@@ -95,9 +99,13 @@ class ingresar_receta(Toplevel):
         #Nombre de la receta
         self.nombreReceta_label.config(text = 'Nombre de la receta', foreground = '#FFFFFF', font = ('Segoe UI Black', 13), background = '#056595')
         self.nombreReceta_input.config(width=30)
+        #Pasos de la receta
+        self.pasosReceta_label.config(text = 'Pasos a seguir', foreground = '#FFFFFF', font = ('Segoe UI Black', 13), background = '#056595')
+        self.pasosReceta_input.config(width=30)
+        self.pasosReceta_button.config(text = 'Agregar', command = self.agregarPasos)
         #Imagen de la receta
         self.imgRec_label.config(text = 'Imagen de la receta', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
-        self.canvas.config(width=200, height=200)
+        self.canvas.config(width=150, height=150)
         self.upload_button.config(text="Subir imagen", command=self.upload_image)
         self.image = None # Variable para almacenar la imagen cargada
         #Tiempo de preparacion
@@ -150,6 +158,19 @@ class ingresar_receta(Toplevel):
 
         else:
             messagebox.showinfo("aviso","La etiqueta ya ha sido ingresada")
+    def agregarPasos(self):
+        pasos=self.pasosReceta_input.get()
+
+
+        # Valida que se ingresaron
+        if not (pasos):
+                messagebox.showerror('Error', 'Debe rellenar Pasos de la receta!')
+                
+        else:
+                self.pasos.append(pasos)
+
+                messagebox.showinfo("aviso","El Paso se ha agregado correctamente,agregue otro!")
+        self.pasosReceta_input.delete(0,'end')
 
 
 
@@ -167,26 +188,30 @@ class ingresar_receta(Toplevel):
         #Boton de subir imagen
         self.upload_button.grid(row = 2, column = 0, padx = 10,pady=5)
         #Espacio para la imagen
-        self.canvas.grid(row=4,column=0,padx=10)
+        self.canvas.grid(row=3,column=0,padx=10)
         #Nombre de la receta
-        self.nombreReceta_label.grid(row=5,columnspan=2,pady=5)
-        self.nombreReceta_input.grid(row=6,columnspan=2,padx=10)
+        self.nombreReceta_label.grid(row=4,columnspan=2,pady=5)
+        self.nombreReceta_input.grid(row=5,columnspan=2,padx=10)
+        #Pasos a seguir
+        self.pasosReceta_label.grid(row=6,columnspan=2,pady=5)  
+        self.pasosReceta_input.grid(row=7,columnspan=2,padx=10)
+        self.pasosReceta_button.grid(row=8,columnspan=2,pady=10)
         #Tiempo de Preparación
-        self.tiempoPre_label.grid(row = 7, column = 0, pady = 5)
-        self.tiempoPre_input.grid(row = 8, column = 0, padx = 10)
+        self.tiempoPre_label.grid(row = 8, column = 0, pady = 5)
+        self.tiempoPre_input.grid(row = 9, column = 0, padx = 10)
         #Tiempo de Cocción
-        self.tiempoCoc_label.grid(row = 7, column = 1, pady = 5)
-        self.tiempoCoc_input.grid(row = 8, column = 1, padx = 10)
+        self.tiempoCoc_label.grid(row = 8, column = 1, pady = 5)
+        self.tiempoCoc_input.grid(row = 9, column = 1, padx = 10)
         #Fecha de creación
-        self.fechaCrea_label.grid(row =9, column = 0, pady = 5)
-        self.fechaCrea_input.grid(row = 10, column = 0, padx = 10)
+        self.fechaCrea_label.grid(row =10, column = 0, pady = 5)
+        self.fechaCrea_input.grid(row = 11, column = 0, padx = 10)
         #Etiquetas
-        self.eti_label.grid(row=9, column=1, padx=10, pady=5)
-        self.eti_input.grid(row=10, column=1, padx=10, pady=5)
+        self.eti_label.grid(row=10, column=1, padx=10, pady=5)
+        self.eti_input.grid(row=11, column=1, padx=10, pady=5)
     
         # Etiqueta output
-        self.etiquetas_label.grid(row=11, column=0, padx=10, sticky='w')
-        self.etiquetas_value.grid(row=12, column=0, padx=10, sticky='w')
+        self.etiquetas_label.grid(row=12, column=0, padx=10, sticky='w')
+        self.etiquetas_value.grid(row=13, column=0, padx=10, sticky='w')
         #Favorito
 
         #Botones
@@ -195,16 +220,16 @@ class ingresar_receta(Toplevel):
         #Ingredientes
 
 
-        self.nombre_label.grid(row =7, column = 4, pady = 5)
-        self.nombre_input.grid(row = 8, column = 4,padx = 10)
-        self.cantidad_label.grid(row =9, column = 4, pady = 5)
-        self.cantidad_input.grid(row = 10, column = 4, padx = 10)
-        self.fav_label.grid(row=7,column=5,pady=5)
-        self.fav_checkbutton.grid(row=8,column=5,padx=10)
-        self.option_menu_label.grid(row = 9, column = 5, pady = 5)
-        self.option_menu.grid(row = 10, column = 5, padx = 10)
-        self.Mostrar_bott.grid(row = 11,column=4)
-        self.MostraIng_bott.grid(row=11,column=5)
+        self.nombre_label.grid(row =8, column = 4, pady = 5)
+        self.nombre_input.grid(row = 9, column = 4,padx = 10)
+        self.cantidad_label.grid(row =10, column = 4, pady = 5)
+        self.cantidad_input.grid(row = 11, column = 4, padx = 10)
+        self.fav_label.grid(row=8,column=5,pady=5)
+        self.fav_checkbutton.grid(row=9,column=5,padx=10)
+        self.option_menu_label.grid(row = 10, column = 5, pady = 5)
+        self.option_menu.grid(row = 11, column = 5, padx = 10)
+        self.Mostrar_bott.grid(row = 12,column=4)
+        self.MostraIng_bott.grid(row=12,column=5)
     
 
     def Guardar(self):
@@ -213,33 +238,51 @@ class ingresar_receta(Toplevel):
         TiempoPre = self.tiempoPre_input.get()
         tiempoCoc = self.tiempoCoc_input.get()
         fechaCrea = self.fechaCrea_input.get()
-        eti = self.etiquetas
+        eti = self.etiDevolver()
         fav=self.favorito_var.get()           
         ingredientes=self.ingredientesDevolver()
+        pasos=self.pasosDevolver()
         print(f"Estos son los ingredientes {self.ingredientesDevolver()}")
-        
-        recetas=[img,TiempoPre,tiempoCoc,fechaCrea,eti,ingredientes]
+        print(f"Estos son los ingredientes {self.pasosDevolver()}")
+
         if len(nombre)>0 and len(TiempoPre) > 0 and len(tiempoCoc) > 0 and len(fechaCrea) > 0 and len(eti) > 0 and len(ingredientes) > 0:
             mensaje=self.Recetario.guardar(nombre,img,TiempoPre,tiempoCoc,fechaCrea,eti,fav)
             messagebox.showinfo('Aviso', mensaje)
-            if mensaje == 'Receta registrada exitosamente!':
-                    self.Cancelar()
-            fieldnames = ["Nombre", "Imagen", "Tiempo de preparacion", "Tiempo de coccion", "Fecha de creacion", "Etiquetas", "Favoritos", "Ingredientes"]
-        try:
-            with open('informacion.csv', mode='r', newline='') as file:
-                reader = csv.DictReader(file, fieldnames=fieldnames)
-                next(reader)  # saltar la primera fila con los nombres de las columnas
-                recetas = list(reader)
-        except FileNotFoundError:
+            fieldnames = ["Nombre","Pasos a seguir","Imagen", "Tiempo de preparacion", "Tiempo de coccion", "Fecha de creacion", "Etiquetas", "Favoritos", "Ingredientes"]
+
+            # Read existing rows from CSV file
             recetas = []
+            try:
+                with open('informacion.csv', mode='r', newline='') as file:
+                    reader = csv.DictReader(file)
+                    for row in reader:
+                        recetas.append(row)
+            except FileNotFoundError:
+                pass
+        
+        # Find recipe with matching name and update columns
+            for r in recetas:
+                if r['Nombre'] == nombre:
+                    r['Pasos a seguir'] = pasos
+                    r['Imagen'] = img
+                    r['Tiempo de preparacion'] = TiempoPre
+                    r['Tiempo de coccion'] = tiempoCoc
+                    r['Fecha de creacion'] = fechaCrea
+                    r['Etiquetas'] = eti
+                    r['Favoritos'] = fav
+                    r['Ingredientes'] = ingredientes
+                    break
+            else:
+                # Recipe not found, add new row
+                recetas.append({'Nombre': nombre,'Pasos a seguir':pasos,'Imagen': img, 'Tiempo de preparacion': TiempoPre, 'Tiempo de coccion': tiempoCoc, 'Fecha de creacion': fechaCrea, 'Etiquetas': eti, 'Favoritos': fav, 'Ingredientes': ingredientes})
+        
+        # Write all rows (updated or new) to CSV file
             with open('informacion.csv', mode='w', newline='') as file:
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()
-                writer.writerows([{'Nombre': nombre, 'Imagen': img, 'Tiempo de preparacion': TiempoPre, 'Tiempo de coccion': tiempoCoc, 'Fecha de creacion': fechaCrea, 'Etiquetas': eti, 'Favoritos': fav, 'Ingredientes': ingredientes}] + recetas)
+                writer.writerows(recetas)
         else:
-     
             messagebox.showerror('Error', 'Debe rellenar todos los campos!')
-            
     def upload_image(self):
         # Abrir cuadro de diálogo para seleccionar archivo de imagen
         filename = filedialog.askopenfilename(initialdir="/", title="Seleccionar imagen", filetypes=(("Archivos de imagen", "*.jpg;*.jpeg;*.png"), ("Todos los archivos", "*.*")))
@@ -251,7 +294,7 @@ class ingresar_receta(Toplevel):
         # Cargar imagen en el canvas y dimensionarla a 200x200
         try:
             image = Image.open(filename)
-            self.image = ImageTk.PhotoImage(image.resize((200, 200), Image.ANTIALIAS))
+            self.image = ImageTk.PhotoImage(image.resize((150, 150), Image.ANTIALIAS))
             self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image)
         except AttributeError:
             mensaje="No seleccionaste ninguna imagen"
@@ -281,6 +324,12 @@ class ingresar_receta(Toplevel):
     def ingredientesDevolver(self):
         a=self.ingredientes
         return a
+    def etiDevolver(self):
+         b=self.etiquetas
+         return b
+    def pasosDevolver(self):
+         c=self.pasos
+         return c
     def report_callback_exception(self, exc, val, tb):
         messagebox.showerror("Error", message=str(val))
     def Cancelar(self):
@@ -315,6 +364,7 @@ class ingresar_receta(Toplevel):
         self.treeview.pack(padx=10, pady=10)
 
 
+ 
 
     def Cancelar(self):
         self.destroy()

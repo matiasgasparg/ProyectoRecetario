@@ -12,7 +12,7 @@ class VerRecetasWindow(tk.Toplevel):
     
         self.img_refs = []
         self.nombre=[]
-        self.geometry('750x500')
+        self.geometry('850x500')
         self.Ingredientes=[]
         self.minsize(200, 200)  # seteamos un tamaño minimo
         self.title("Todas las Recetas")
@@ -77,7 +77,7 @@ class VerRecetasWindow(tk.Toplevel):
                 self.treeview.insert(parent='', index='end', iid=i, text=str(i), values=row)
                 
         # Obtiene la URL de la imagen de la columna Imagen
-                img_url = row[1]
+                img_url = row[2]
         # Cargar la imagen y guardar su referencia
                 img = Image.open(img_url)
                 img = img.resize((200, 200), Image.ANTIALIAS)
@@ -87,7 +87,7 @@ class VerRecetasWindow(tk.Toplevel):
                 nomb=row[0]
                 self.nombre.append(nomb)
         #Obtiene los datos de ingredientes
-                ing = row[7]
+                ing = row[8]
                 self.Ingredientes.append(ing)
 
 

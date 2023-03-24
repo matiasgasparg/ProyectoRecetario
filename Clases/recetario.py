@@ -13,7 +13,8 @@ class Recetario (Ingredientes):
 
     def nombre_setter(self, nombre):
         self.nombre=nombre
-
+    def pasosAseguir_setter(self,pasos):
+        self.pasos=pasos
     def imgDelPlato_setter(self,imgDelPlato):
         self.imgDelPlato=imgDelPlato
     def favorito_setter(self, favorito):
@@ -37,7 +38,6 @@ class Recetario (Ingredientes):
         self.fechaDeCreacion_setter(fechaDeCreacion)
         self.etiquetas_setter(etiquetas)
         self.favorito_setter(favorito)
-
         lista=(self.nombre,self.imgDelPlato,self.tiemplDePreparacion,self.tiempoDeCoccion,self.etiquetas,self.favorito)
         mensaje='Receta registrada exitosamente!'
         return 'Receta registrada exitosamente!'

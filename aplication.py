@@ -50,12 +50,12 @@ class MyGUI(tk.Tk):
             self.treeview.column("2", width=50, stretch=False,anchor='center')
             self.treeview.heading("3", text="Tiempo de coccion",anchor='center')
             self.treeview.column("3", width=50, stretch=False,anchor='center')
-            self.treeview.heading("4", text="Fecha de creacion",anchor='center')
+            self.treeview.heading("4", text="Pasos a seguir",anchor='center')
             self.treeview.column("4", width=50, stretch=True,anchor='center')
             self.treeview.heading("5", text="Ingredientes",anchor='center')
             self.treeview.column("5", width=50, stretch=True,anchor='center')
 
-            self.treeview.insert("", "end", values=(random_row[0], random_row[2], random_row[3],random_row[4],random_row[7]))
+            self.treeview.insert("", "end", values=(random_row[0], random_row[3], random_row[4],random_row[1],random_row[8]))
             self.treeview.pack(expand=True, fill='both')
 
 

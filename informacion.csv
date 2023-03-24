@@ -1,6 +1,2 @@
-Nombre,Imagen,Tiempo de preparacion,Tiempo de coccion,Fecha de creacion,Etiquetas,Favoritos,Ingredientes
-Prueba,C:\Users\walke\Downloads\46-pizza-png-image-thumb.png,20,30,2023-03-20,"['Dulce', 'Salado']",True,"[{'nombre': 'Leche', 'cantidad': '100', 'unidad_medida': 'kg'}, {'nombre': 'Azucar', 'cantidad': '20000', 'unidad_medida': 'Tazas'}]"
-Prueba2,C:\Users\walke\Downloads\46-pizza-png-image-thumb.png,20,30,2023-03-20,"['Dulce', 'Salado']",True,"[{'nombre': 'Pan', 'cantidad': '100', 'unidad_medida': 'kg'}, {'nombre': 'Azucar', 'cantidad': '20000', 'unidad_medida': 'Tazas'}]"
-Prueba3,C:\Users\walke\Downloads\stock-vector-hydroponic-icon-set-796442596.jpg,20,30,2023-03-20,"['Dulce', 'Salado']",True,"[{'nombre':'Res', 'cantidad': '100', 'unidad_medida': 'kg'}, {'nombre': 'Azucar', 'cantidad': '20000', 'unidad_medida': 'Tazas'}]"
-Prueba5,C:\Users\walke\Downloads\stock-vector-hydroponic-icon-set-796442596.jpg,20,30,2023-03-20,"['Dulce', 'Salado']",True,"[{'nombre':'Res', 'cantidad': '100', 'unidad_medida': 'kg'}, {'nombre': 'Azucar', 'cantidad': '20000', 'unidad_medida': 'Tazas'}]"
-Prueba7,C:\Users\walke\Downloads\stock-vector-hydroponic-icon-set-796442596.jpg,20,30,2023-03-20,"['Dulce', 'Salado']",True,"[{'nombre':'Res', 'cantidad': '100', 'unidad_medida': 'kg'}, {'nombre': 'Azucar', 'cantidad': '20000', 'unidad_medida': 'Tazas'}]"
+Nombre,Pasos a seguir,Imagen,Tiempo de preparacion,Tiempo de coccion,Fecha de creacion,Etiquetas,Favoritos,Ingredientes
+Pizza,"['Calentar el horno', 'Poner la pizza', 'Sacar la pizza']",C:/Users/walke/Downloads/46-pizza-png-image-thumb.png,12,12,2023-03-23,['asdsad'],True,"[{'nombre': 'Harina', 'cantidad': '1', 'unidad_medida': 'kg'}, {'nombre': 'Queso', 'cantidad': '500', 'unidad_medida': 'g'}]"
