@@ -8,7 +8,7 @@ from PIL import Image, ImageTk
 from tkinter import Canvas
 from datetime import datetime
 import datetime
-import os
+
 class ingresar_receta(Toplevel):
     def __init__(self, master):
         Toplevel.__init__(self)     
@@ -30,7 +30,7 @@ class ingresar_receta(Toplevel):
         
         """FRAMES"""
         self.F_cab = tk.Frame(self)         #Cabecera
-        self.F_img=tk.Frame(self) #Imagen
+        self.F_img=tk.Frame(self)           #Imagen
         self.F_rec = tk.Frame(self)     #Datos de la Receta
         self.F_boton = tk.Frame(self)       #Botones
 
@@ -95,7 +95,6 @@ class ingresar_receta(Toplevel):
     def widgets_config(self):
         #Titulo - Principal
         self.Cab_principal.config(text = '------------------Ingresá tu receta!-----------------------', foreground = '#FFFFFF', font = ('Segoe UI Black', 24), background = '#002B40')
-        #Titulo - Ingredientes
         #Nombre de la receta
         self.nombreReceta_label.config(text = 'Nombre de la receta', foreground = '#FFFFFF', font = ('Segoe UI Black', 13), background = '#056595')
         self.nombreReceta_input.config(width=30)
@@ -118,7 +117,7 @@ class ingresar_receta(Toplevel):
         #Fecha de creación
         self.fechaCrea_label.config(text = 'Fecha de creación', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
         now = datetime.datetime.now()
-        self.fechaCrea_input.insert(0,now.strftime("%Y-%m-%d"))
+        self.fechaCrea_input.insert(0,now.strftime("%Y-%m-%d %H:%M:%S"))
         self.fechaCrea_input.config(width = 30)
         #Etiquetas
         self.eti_label.config(text = 'Etiquetas', foreground = '#FFFFFF', font = ('Segoe UI Black', 14), background = '#056595')
@@ -250,7 +249,7 @@ class ingresar_receta(Toplevel):
             messagebox.showinfo('Aviso', mensaje)
             fieldnames = ["Nombre","Pasos a seguir","Imagen", "Tiempo de preparacion", "Tiempo de coccion", "Fecha de creacion", "Etiquetas", "Favoritos", "Ingredientes"]
 
-            # Read existing rows from CSV file
+            # Lee las filas existentes del CSV
             recetas = []
             try:
                 with open('informacion.csv', mode='r', newline='') as file:
@@ -260,7 +259,7 @@ class ingresar_receta(Toplevel):
             except FileNotFoundError:
                 pass
         
-        # Find recipe with matching name and update columns
+            #Busca una receta de igual nombre
             for r in recetas:
                 if r['Nombre'] == nombre:
                     r['Pasos a seguir'] = pasos
@@ -271,12 +270,14 @@ class ingresar_receta(Toplevel):
                     r['Etiquetas'] = eti
                     r['Favoritos'] = fav
                     r['Ingredientes'] = ingredientes
+                    messagebox.showinfo("aviso","La receta ha sido actualizada")
                     break
             else:
-                # Recipe not found, add new row
+                 # Si no se encuentra crea una nueva
                 recetas.append({'Nombre': nombre,'Pasos a seguir':pasos,'Imagen': img, 'Tiempo de preparacion': TiempoPre, 'Tiempo de coccion': tiempoCoc, 'Fecha de creacion': fechaCrea, 'Etiquetas': eti, 'Favoritos': fav, 'Ingredientes': ingredientes})
         
-        # Write all rows (updated or new) to CSV file
+        # Escribe todas las filas
+
             with open('informacion.csv', mode='w', newline='') as file:
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()

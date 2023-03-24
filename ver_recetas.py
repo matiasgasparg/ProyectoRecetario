@@ -5,49 +5,73 @@ import csv
 from tkinter import Canvas
 from PIL import Image, ImageTk
 
-
 class VerRecetasWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
-    
+        self.predeterminado ="IMG/Imagen_no_disponible.png"
+
         self.img_refs = []
         self.nombre=[]
-        self.geometry('850x500')
+        self.geometry('850x620')
         self.Ingredientes=[]
-        self.minsize(200, 200)  # seteamos un tamaño minimo
         self.title("Todas las Recetas")
         self.configure(bg='#056595')            
         self.columns = []
+        self.tiempos=[]
+        self.pasos=[]
+        #Frame
+        self.F_cab = tk.Frame(self)
+        self.F_cab.config(border = 15, bg = '#002B40')
+        self.F_cab.grid(row = 0, column = 0, columnspan = 100,sticky="ew")
+        self.F_datos=tk.Frame(self)         #Datos
+        self.F_datos.config(bg = '#056595')
+        self.F_datos.grid(row=1,column=0)
+        self.F_button=tk.Frame(self)        #Botones
+        self.F_button.config(bg = '#056595') 
+        self.F_button.grid(row=5,columnspan = 3)
+        self.F_img=tk.Frame(self)           #Imagen
+        self.F_img.config(bg = '#056595')
+        self.F_img.grid(row=1,column=1)
+        self.tree=tk.Frame(self)            #Tree
+        self.tree.grid(row=4,columnspan=2)
+        
+        #Crea el cabeza
+        self.titulo=tk.Label(self.F_cab)
+        self.titulo.config(text = '--------------------Todas las recetas!-----------------------', foreground = '#FFFFFF', font = ('Segoe UI Black', 24), background = '#002B40')
+        self.titulo.grid(row = 0)
 
         # Crea botón de eliminar
-        self.delete_button = tk.Button(self, text="Eliminar", command=self.delete_selected)
-        self.delete_button.grid(row=0, column=1, padx=0, pady=0)
+        self.delete_button = tk.Button(self.F_button, text="Eliminar", command=self.delete_selected)
+        self.delete_button.grid(row=3, column=0,padx = 10, pady = 10, ipadx = 5, ipady = 5)
         
         # Crea botón de modificar
-        self.modify_button = tk.Button(self, text="Modificar", command=self.modify_selected)
-        self.modify_button.grid(row=1, column=1, padx=0, pady=0)
+        self.modify_button = tk.Button(self.F_button, text="Modificar", command=self.modify_selected)
+        self.modify_button.grid(row=3, column=1, padx = 10, pady = 10, ipadx = 5, ipady = 5)
         
         # Creacion del botón buscar
-        self.search_button = tk.Button(self, text="Buscar", command=self.search)
-        self.search_button.grid(row=2, column=1, padx=0, pady=0)
+        self.search_button = tk.Button(self.F_button, text="Buscar", command=self.search)
+        self.search_button.grid(row=0, column=0,padx = 10, pady = 10, ipadx = 5, ipady = 5)
         
         #Creacion del label para ingresar busaqueda
-        self.search_entry=tk.Entry(self)
-        self.search_entry.grid(row=3, column=1, padx=0, pady=0)
-        #Muestra el nombre de la receta
-        self.nombre_value = ttk.Label(self, text='#', foreground='#FFFFFF', font=('Segoe UI', 15), background='#056595')
-        self.nombre_value.grid(row=0, column=0, padx=0, pady=0)
-
-        self.ingMostrar_value = ttk.Label(self, text='#', foreground='#FFFFFF', font=('Segoe UI', 15), background='#056595')
+        self.search_entry=tk.Entry(self.F_button)
+        self.search_entry.grid(row=0, column=1, padx=0, pady=0)
+        #Muestra los datos de la receta
+        self.nombre_value = ttk.Label(self.F_datos, text='#', foreground='#FFFFFF', font=('Segoe UI', 15), background='#056595')
+        self.nombre_value.grid(row=0, column=0, padx=0, pady=5)
+        self.ingMostrar_value = ttk.Label(self.F_datos, text='#', foreground='#FFFFFF', font=('Segoe UI', 15), background='#056595')
         self.ingMostrar_value.grid(row=1, column=0, padx=0, pady=0)
+        self.tiempos_value = ttk.Label(self.F_datos, text='#', foreground='#FFFFFF', font=('Segoe UI', 15), background='#056595')
+        self.tiempos_value.grid(row=0, column=1, padx=10, pady=0)
+        self.pasos_value = ttk.Label(self.F_datos, text='#', foreground='#FFFFFF', font=('Segoe UI', 15), background='#056595')
+        self.pasos_value.grid(row=1, column=1, padx=10, pady=0)
+        self.canvas = Canvas(self.F_img)
+        self.canvas.config(width=150, height=150)
 
-
-        self.image_label = tk.Label(self)
-        self.image_label.grid(row=1, column=2, padx=0, pady=0)
+        self.canvas.grid(row=3, column=1, padx=0, pady=0)
  
         # Crear Treeview
-        self.treeview = ttk.Treeview(self, selectmode='browse')
-        self.treeview.grid(row=4, column=0, columnspan=3, sticky="nsew", padx=0, pady=0)
+        self.treeview = ttk.Treeview(self.tree, selectmode='browse')
+        self.treeview.grid(row=0, column=0, columnspan=2, padx=0, pady=0)
         self.treeview.bind("<<TreeviewSelect>>", self.seleccionado)
 
         # Carga el archivo CSV
@@ -79,13 +103,29 @@ class VerRecetasWindow(tk.Toplevel):
         # Obtiene la URL de la imagen de la columna Imagen
                 img_url = row[2]
         # Cargar la imagen y guardar su referencia
-                img = Image.open(img_url)
-                img = img.resize((200, 200), Image.ANTIALIAS)
-                img = ImageTk.PhotoImage(img)
-                self.img_refs.append(img)
+                if img_url:
+                    img = Image.open(img_url)
+                    img = img.resize((150,150), Image.ANTIALIAS)
+                    img = ImageTk.PhotoImage(img)
+                    self.img_refs.append(img)
+                else:
+                    img=Image.open(self.predeterminado)
+                    img = img.resize((150,150), Image.ANTIALIAS)
+                    img = ImageTk.PhotoImage(img)
+
+                    self.img_refs.append(img)
         #Obtiene el nombre de la receta
                 nomb=row[0]
                 self.nombre.append(nomb)
+        #Obtiene los pasos a seguir
+                pasos=row[1]
+                self.pasos.append(pasos)
+        #Obtiene el tiempo de coccion y preparación
+                tPre=row[3]
+                tCoc=row[4]
+                self.tiempos.append(tPre)
+                self.tiempos.append(tCoc)
+                
         #Obtiene los datos de ingredientes
                 ing = row[8]
                 self.Ingredientes.append(ing)
@@ -101,15 +141,13 @@ class VerRecetasWindow(tk.Toplevel):
             img = self.img_refs[index]
             
         # Muestra la imagen en la etiqueta de imagen
-            self.image_label.configure(image=img)
-            self.image_label.image = img  # Guarda una referencia a la imagen para evitar que sea eliminada por el garbage collector
-
+            self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
+        
         # Obtiene los datos de ingredientes correspondientes a la fila seleccionada
             if index < len(self.Ingredientes):
                 ing = eval(self.Ingredientes[index])
 
-                print(type(ing))
-                print(ing)
+
                 texto_ingredientes = ''
 
                 for i, item in enumerate(ing):
@@ -118,6 +156,24 @@ class VerRecetasWindow(tk.Toplevel):
             if index<len(self.nombre):
                 nomb=self.nombre[index]
                 self.nombre_value.configure(text=f'#Nombre: \n-{nomb} ')
+            if index<len(self.pasos):
+                print(self.pasos)
+                print(type(self.pasos))
+                pasos=eval(self.pasos[index])
+                print(pasos)
+                print(type(pasos))
+                palabra=''
+                contador=0
+                for item in pasos:
+                    contador+=1
+                    palabra+=item + '\n'
+                self.pasos_value.configure(text=f"Pasos a seguir ({contador}):\n{palabra}")
+            if index<len(self.tiempos):
+                tiempo=self.tiempos[index].split(',')
+                tiempo2=self.tiempos[index+1].split(',')
+                tPre=tiempo[0]
+                tCoc=tiempo2[0]
+                self.tiempos_value.configure(text=f'Tiempo preparación: {tPre} minutos \n Tiempo de cocción: {tCoc} minutos')
    
             
 

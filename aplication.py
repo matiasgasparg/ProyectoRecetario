@@ -1,12 +1,12 @@
 
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox, Toplevel
 from ingresar_receta import ingresar_receta
 import csv
 from ver_recetas import VerRecetasWindow
 from PIL import ImageTk, Image
 import random
-
+import os
 class MyGUI(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -36,33 +36,48 @@ class MyGUI(tk.Tk):
         self.treeview_scrollbar_x.pack(side=tk.BOTTOM, fill=tk.X)
         
     def mostrar_receta(self):
-        with open('informacion.csv') as csvfile:
-            reader = csv.reader(csvfile,skipinitialspace=True)
-            next(reader)
-            data = list(reader)
-            random_row = random.choice(data)
-            self.treeview.delete(*self.treeview.get_children())
-            self.treeview["columns"] = ["1","2","3","4","5"]
-            self.treeview.column("#0", width=0, stretch=False)
-            self.treeview.heading("1", text="Nombre")
-            self.treeview.column("1", width=50, stretch=False,anchor='center')
-            self.treeview.heading("2", text="Tiempo de preparacion",anchor='center')
-            self.treeview.column("2", width=50, stretch=False,anchor='center')
-            self.treeview.heading("3", text="Tiempo de coccion",anchor='center')
-            self.treeview.column("3", width=50, stretch=False,anchor='center')
-            self.treeview.heading("4", text="Pasos a seguir",anchor='center')
-            self.treeview.column("4", width=50, stretch=True,anchor='center')
-            self.treeview.heading("5", text="Ingredientes",anchor='center')
-            self.treeview.column("5", width=50, stretch=True,anchor='center')
+        try:
+            with open('informacion.csv') as csvfile:
+                reader = csv.reader(csvfile,skipinitialspace=True)
+                next(reader)
+                data = list(reader)
+                random_row = random.choice(data)
+                self.treeview.delete(*self.treeview.get_children())
+                self.treeview["columns"] = ["1","2","3","4","5"]
+                self.treeview.column("#0", width=0, stretch=False)
+                self.treeview.heading("1", text="Nombre")
+                self.treeview.column("1", width=50, stretch=False,anchor='center')
+                self.treeview.heading("2", text="Tiempo de preparacion",anchor='center')
+                self.treeview.column("2", width=50, stretch=False,anchor='center')
+                self.treeview.heading("3", text="Tiempo de coccion",anchor='center')
+                self.treeview.column("3", width=50, stretch=False,anchor='center')
+                self.treeview.heading("4", text="Pasos a seguir",anchor='center')
+                self.treeview.column("4", width=50, stretch=True,anchor='center')
+                self.treeview.heading("5", text="Ingredientes",anchor='center')
+                self.treeview.column("5", width=50, stretch=True,anchor='center')
 
-            self.treeview.insert("", "end", values=(random_row[0], random_row[3], random_row[4],random_row[1],random_row[8]))
-            self.treeview.pack(expand=True, fill='both')
+                self.treeview.insert("", "end", values=(random_row[0], random_row[3], random_row[4],random_row[1],random_row[8]))
+                self.treeview.pack(expand=True, fill='both')
+        except FileNotFoundError:
+                
+                 messagebox.showerror('Error', 'No hay recetas,Ingresa una receta!')
+
+            
+
 
 
     def ingresar_receta(self):
+ 
         ventana=ingresar_receta(self)
         ventana.mainloop()
         
     def open_ver_recetas(self):
-        ventana=VerRecetasWindow(self)
-        ventana.mainloop()
+        nombre_archivo = "informacion.csv"
+
+        if os.path.isfile(nombre_archivo):
+            ventana=VerRecetasWindow(self)
+            ventana.mainloop()
+
+        else:
+            messagebox.showerror('Error', 'No hay recetas,Ingresa una receta!')
+   
