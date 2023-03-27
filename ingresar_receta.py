@@ -234,8 +234,12 @@ class ingresar_receta(Toplevel):
     def Guardar(self):
         nombre=self.nombreReceta_input.get()
         img = self.path_text.get(1.0, tk.END).strip()
-        TiempoPre = self.tiempoPre_input.get()
-        tiempoCoc = self.tiempoCoc_input.get()
+        try:
+            TiempoPre = int(self.tiempoPre_input.get())
+            tiempoCoc = int(self.tiempoCoc_input.get())
+        except ValueError:
+            messagebox.showerror('Error', 'Los campos "Tiempo de preparación" y "Tiempo de cocción" deben ser números enteros!')
+            return
         fechaCrea = self.fechaCrea_input.get()
         eti = self.etiDevolver()
         fav=self.favorito_var.get()           
@@ -244,7 +248,7 @@ class ingresar_receta(Toplevel):
         print(f"Estos son los ingredientes {self.ingredientesDevolver()}")
         print(f"Estos son los ingredientes {self.pasosDevolver()}")
 
-        if len(nombre)>0 and len(TiempoPre) > 0 and len(tiempoCoc) > 0 and len(fechaCrea) > 0 and len(eti) > 0 and len(ingredientes) > 0:
+        if len(nombre)>0 and TiempoPre > 0 and tiempoCoc> 0 and len(fechaCrea) > 0 and len(eti) > 0 and len(ingredientes) > 0:
             mensaje=self.Recetario.guardar(nombre,img,TiempoPre,tiempoCoc,fechaCrea,eti,fav)
             messagebox.showinfo('Aviso', mensaje)
             fieldnames = ["Nombre","Pasos a seguir","Imagen", "Tiempo de preparacion", "Tiempo de coccion", "Fecha de creacion", "Etiquetas", "Favoritos", "Ingredientes"]
@@ -288,11 +292,11 @@ class ingresar_receta(Toplevel):
         # Abrir cuadro de diálogo para seleccionar archivo de imagen
         filename = filedialog.askopenfilename(initialdir="/", title="Seleccionar imagen", filetypes=(("Archivos de imagen", "*.jpg;*.jpeg;*.png"), ("Todos los archivos", "*.*")))
         
-        # Actualizar cuadro de texto con la ubicación del archivo de imagen seleccionado
+        # Actualiza el cuadro de texto con la ubicación del archivo de la imagen seleccionada
         self.path_text.delete(1.0, tk.END)
         self.path_text.insert(tk.END, filename)
 
-        # Cargar imagen en el canvas y dimensionarla a 200x200
+        # Carga la imagen en el canvas y dimensionarla a 200x200
         try:
             image = Image.open(filename)
             self.image = ImageTk.PhotoImage(image.resize((150, 150), Image.ANTIALIAS))
@@ -331,8 +335,7 @@ class ingresar_receta(Toplevel):
     def pasosDevolver(self):
          c=self.pasos
          return c
-    def report_callback_exception(self, exc, val, tb):
-        messagebox.showerror("Error", message=str(val))
+
     def Cancelar(self):
             self.destroy()
     def mostrar_datos(self):
