@@ -23,7 +23,7 @@ class ingresar_receta(Toplevel):
         self.etiquetas = []
         self.ingredientes=[]
         self.pasos=[]
-        opciones=["kg","g","cm3","cucharadita/s","Tazas"]
+        opciones=["kg","g","cm3","unidades","cucharadita/s","Tazas"]
 
         self.Recetario = Recetario()
         self.Ingredientes = Ingredientes()
