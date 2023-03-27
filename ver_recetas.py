@@ -8,18 +8,21 @@ from PIL import Image, ImageTk
 class VerRecetasWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
-        self.predeterminado ="IMG/Imagen_no_disponible.png"
 
-        self.img_refs = []
-        self.nombre=[]
-        self.geometry('850x620')
-        self.Ingredientes=[]
+        self.geometry('870x640')
         self.title("Todas las Recetas")
-        self.configure(bg='#056595')            
+        self.configure(bg='#056595') 
+        #Listas para obtener datos          
         self.columns = []
+        self.Ingredientes=[]
         self.tiempos=[]
         self.pasos=[]
-        #Frame
+        self.img_refs = []
+        self.nombre=[]
+        #Imagen predeterminada del plato
+        self.predeterminado ="IMG/Imagen_no_disponible.png"
+
+        #Frame  
         self.F_cab = tk.Frame(self)
         self.F_cab.config(border = 15, bg = '#002B40')
         self.F_cab.grid(row = 0, column = 0, columnspan = 100,sticky="ew")
@@ -41,11 +44,11 @@ class VerRecetasWindow(tk.Toplevel):
         self.titulo.grid(row = 0)
 
         # Crea botón de eliminar
-        self.delete_button = tk.Button(self.F_button, text="Eliminar", command=self.delete_selected)
+        self.delete_button = tk.Button(self.F_button, text="Eliminar", command=self.eliminar_seleccionado)
         self.delete_button.grid(row=3, column=0,padx = 10, pady = 10, ipadx = 5, ipady = 5)
         
         # Crea botón de modificar
-        self.modify_button = tk.Button(self.F_button, text="Modificar", command=self.modify_selected)
+        self.modify_button = tk.Button(self.F_button, text="Modificar", command=self.modificar_seleccionado)
         self.modify_button.grid(row=3, column=1, padx = 10, pady = 10, ipadx = 5, ipady = 5)
         
         # Creacion del botón buscar
@@ -157,11 +160,7 @@ class VerRecetasWindow(tk.Toplevel):
                 nomb=self.nombre[index]
                 self.nombre_value.configure(text=f'#Nombre: \n-{nomb} ')
             if index<len(self.pasos):
-                print(self.pasos)
-                print(type(self.pasos))
                 pasos=eval(self.pasos[index])
-                print(pasos)
-                print(type(pasos))
                 palabra=''
                 contador=0
                 for item in pasos:
@@ -178,10 +177,11 @@ class VerRecetasWindow(tk.Toplevel):
             
 
 
-    def delete_selected(self):
+    def eliminar_seleccionado(self):
+        
         # Checkea si un item esta seleccionado
         if self.treeview.selection():
-        # Obtiene item seleccionado
+        # Obtiene el elemento seleccionado
             selected_item = self.treeview.selection()[0]
         # Obtiene el índice del item seleccionado
             index = int(self.treeview.item(selected_item)['text'])
@@ -194,8 +194,13 @@ class VerRecetasWindow(tk.Toplevel):
             with open('informacion.csv', 'w', newline='') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerows(data)
+         # Maensaje de error si no se selecciona una columna
+        else: 
+            msj="Seleccione una columna"
+            messagebox.showinfo('Aviso', msj)
 
-    def modify_selected(self):
+
+    def modificar_seleccionado(self):
         try:
             # Obtiene item seleccionado
             selected_item = self.treeview.selection()[0]
@@ -204,30 +209,30 @@ class VerRecetasWindow(tk.Toplevel):
             # Obtiene valores de la fila seleccionada
             values = self.treeview.item(selected_item)['values']
             # Crea una ventana de diálogo para modificar los datos
-            dialog = tk.Toplevel()
-            dialog.title("Modificar datos")
+            ventana = tk.Toplevel()
+            ventana.title("Modificar datos")
             # Crea campos de entrada para cada columna
             entry_boxes = []
             for i in range(len(self.columns)):
-                label = tk.Label(dialog, text=self.columns[i])
+                label = tk.Label(ventana, text=self.columns[i])
                 label.grid(row=i, column=0, padx=5, pady=5)
-                entry = tk.Entry(dialog, width=30)
+                entry = tk.Entry(ventana, width=30)
                 entry.grid(row=i, column=1, padx=5, pady=5)
                 entry.insert(0, values[i])
                 entry_boxes.append(entry)
             # Crea botones para guardar y cancelar los cambios
-            button_frame = tk.Frame(dialog)
+            button_frame = tk.Frame(ventana)
             button_frame.grid(row=len(self.columns), column=0, columnspan=2, padx=5, pady=5)
-            save_button = tk.Button(button_frame, text="Guardar cambios", command=lambda: self.save_changes(dialog, selected_item, index, entry_boxes))
+            save_button = tk.Button(button_frame, text="Guardar cambios", command=lambda: self.guardar_cambios(ventana, selected_item, index, entry_boxes))
             save_button.pack(side=tk.LEFT, padx=5, pady=5)
-            cancel_button = tk.Button(button_frame, text="Cancelar", command=dialog.destroy)
-            cancel_button.pack(side=tk.LEFT, padx=5, pady=5)
+            cancelar_button = tk.Button(button_frame, text="Cancelar", command=ventana.destroy)
+            cancelar_button.pack(side=tk.LEFT, padx=5, pady=5)
         except IndexError:
             # Maensaje de error si no se selecciona una columna
             msj="Seleccione una columna"
             messagebox.showinfo('Aviso', msj)
 
-    def save_changes(self, dialog, selected_item, index, entry_boxes):
+    def guardar_cambios(self, ventana, selected_item, index, entry_boxes):
     # Obtiene nuevos valores de los campos de entrada
         new_values = [entry.get() for entry in entry_boxes]
     # Actualiza los valores en el Treeview
@@ -241,28 +246,36 @@ class VerRecetasWindow(tk.Toplevel):
             writer = csv.writer(csvfile)
             writer.writerows(data)
     # Cierra ventana de diálogo
-        dialog.destroy()
+        ventana.destroy()
     def search(self):
         # Obtener el texto ingresado por el usuario
-        query = self.search_entry.get().lower()
+        buscado = self.search_entry.get().lower()
         # Obtener los índices de las columnas de etiquetas y nombres
-        tags_col = self.columns.index('Etiquetas')
-        name_col = self.columns.index('Nombre')
+        etiquetas_col = self.columns.index('Etiquetas')
+        nombre_col = self.columns.index('Nombre')
+        tiempo_col=self.columns.index('Tiempo de preparacion')
+        ingredientes_col=self.columns.index('Ingredientes')
+
         # Eliminar los elementos actuales del Treeview
         self.treeview.delete(*self.treeview.get_children())
         # Leer archivo CSV
         with open('informacion.csv', newline='') as csvfile:
             reader = csv.reader(csvfile)
-            # Ignorar la primera fila (encabezados)
+            # Ignora la primera fila (encabezados)
             next(reader)
             # Recorrer las filas del archivo CSV
             for i, row in enumerate(reader):
-            # Obtener las etiquetas de la fila actual
-                tags = row[tags_col].lower().split(', ')
-            # Obtener el nombre de la fila actual
-                name = row[name_col].lower()
+            # Obtiene las etiquetas de la fila actual
+                etiquetas = row[etiquetas_col].lower()
+            # Obtiene el nombre de la fila actual
+                nombre = row[nombre_col].lower()
+            #Obtiene el tiempo de preaparcion en la fila actual
+                tiempo=row[tiempo_col].lower()
+            #Obtiene los ingredientes de la fila actual
+                ingredientes=row[ingredientes_col].lower()
+
             # Verificar si la fila actual coincide con la búsqueda
-                if query in tags or query in name:
+                if buscado in etiquetas or buscado in nombre or buscado in tiempo or buscado in ingredientes:
                 # Agregar la fila actual al Treeview
                     self.treeview.insert('', 'end', text=str(i), values=row)
         self.search_entry.delete(0,'end')
